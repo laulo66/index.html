@@ -581,14 +581,22 @@ const COURSES = [
   { label: 'HyperSail GP2', slug: 'hypersail2', name: 'hypersail' },
 ];
 
-/* Options Zezo (bits) — basé sur les paramètres Zezo standard */
+/* Options Zezo — bits déduits empiriquement depuis les URLs Zezo réelles
+   Bit 2   = défaut toujours ON (hull polish interne Zezo)
+   Bit 4   = Pro winches
+   Bit 16  = Foils
+   Bit 32  = Light sails
+   Bit 64  = C0 (Reaching)
+   Bit 128 = Heavy sails
+   Full Pack = 246 (2+4+16+32+64+128)
+*/
 const OPTIONS = [
-  { label: 'Full Pack',  bit: 1  },
-  { label: 'Hull',       bit: 2  },
-  { label: 'Foils',      bit: 4  },
-  { label: 'Winch',      bit: 8  },
-  { label: 'Light',      bit: 16 },
-  { label: 'Heavy',      bit: 32 },
+  { label: 'Full Pack',   bit: 244, full: true },  // 244 = 4+16+32+64+128 (bit2 toujours ON)
+  { label: 'C0',          bit: 64  },
+  { label: 'Light sails', bit: 32  },
+  { label: 'Heavy sails', bit: 128 },
+  { label: 'Foils',       bit: 16  },
+  { label: 'Pro winch',   bit: 4   },
 ];
 
 /* ═══════════════════════════════════════════════
@@ -670,10 +678,12 @@ function selectCourse(slug, label) {
 function buildOptionsGrid() {
   const grid = document.getElementById('options-grid');
   grid.innerHTML = OPTIONS.map(opt => {
-    const active = (state.o & opt.bit) !== 0;
+    const active = opt.full
+      ? (state.o & 244) === 244
+      : (state.o & opt.bit) !== 0;
     return `
       <div class="opt-toggle ${active ? 'active' : ''}"
-        onclick="toggleOption(${opt.bit})" data-bit="${opt.bit}">
+        onclick="toggleOption(${opt.bit}, ${!!opt.full})" data-bit="${opt.bit}">
         ${opt.label}
         <span class="opt-val ${active ? 'active-val' : ''}">${active ? 'ON' : 'off'}</span>
       </div>
@@ -682,8 +692,16 @@ function buildOptionsGrid() {
   document.getElementById('o-display').textContent = state.o;
 }
 
-function toggleOption(bit) {
-  state.o ^= bit;
+function toggleOption(bit, isFull) {
+  if (isFull) {
+    // Full Pack = tout coché (246) ou tout décoché (2 = défaut minimal)
+    const allBits = 244; // 4+16+32+64+128
+    const isFullOn = (state.o & allBits) === allBits;
+    state.o = isFullOn ? 2 : 246; // 2 = défaut minimal, 246 = tout
+  } else {
+    state.o = (state.o | 2) ^ bit; // bit 2 toujours présent
+    if ((state.o & bit) === 0) state.o |= 2; // s'assurer que bit2 reste
+  }
   saveConfig();
   buildOptionsGrid();
 }
