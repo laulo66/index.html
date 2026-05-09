@@ -92,22 +92,7 @@
   }
   .card-body { padding: 12px 14px; }
 
-  /* ── COORDS INPUT ── */
-  .coords-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-  .coord-group { display: flex; flex-direction: column; gap: 4px; }
-  .coord-label {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
-  .coord-input-row { display: flex; gap: 4px; align-items: center; }
+  /* ── COORDS INPUT style Zezo ── */
   input[type="number"], input[type="text"], select {
     background: var(--bg3);
     border: 1px solid var(--border);
@@ -124,62 +109,64 @@
     border-color: var(--accent);
     box-shadow: 0 0 0 2px rgba(0,200,255,0.15);
   }
-  .deg-input { width: 52px; flex-shrink: 0; }
-  .min-input { width: 44px; flex-shrink: 0; }
-  .sec-input { width: 44px; flex-shrink: 0; }
-  .dir-select {
-    width: 52px;
-    flex-shrink: 0;
-    font-family: var(--ui);
-    font-weight: 700;
-    font-size: 14px;
-    padding: 8px 6px;
-    text-align: center;
-  }
-  .coord-sep {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--muted);
-    flex-shrink: 0;
-  }
 
-  /* ── PASTE ZONE ── */
-  .paste-hint {
-    font-size: 11px;
-    color: var(--muted);
-    margin-bottom: 6px;
+  .coord-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
   }
-  .paste-hint strong { color: var(--accent); }
-  textarea {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-family: var(--mono);
+  .coord-dir-label {
     font-size: 13px;
-    padding: 8px 10px;
-    width: 100%;
-    resize: none;
-    height: 44px;
-    outline: none;
-  }
-  textarea:focus { border-color: var(--accent); }
-  .parse-btn {
-    margin-top: 6px;
-    background: rgba(0,200,255,0.1);
-    border: 1px solid rgba(0,200,255,0.3);
-    border-radius: 6px;
-    color: var(--accent);
+    font-weight: 900;
     font-family: var(--ui);
-    font-size: 13px;
-    font-weight: 700;
+    color: var(--accent);
     letter-spacing: 0.06em;
-    padding: 8px 14px;
-    cursor: pointer;
-    width: 100%;
+    width: 32px;
+    flex-shrink: 0;
     text-transform: uppercase;
   }
-  .parse-btn:active { background: rgba(0,200,255,0.2); }
+  .coord-field {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    flex: 1;
+  }
+  .coord-field input {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    padding: 10px 4px;
+    width: 100%;
+  }
+  .coord-field-label {
+    font-size: 9px;
+    color: var(--muted);
+    font-family: var(--ui);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .coord-sep-sym {
+    font-family: var(--mono);
+    font-size: 20px;
+    color: var(--muted);
+    flex-shrink: 0;
+    padding-bottom: 16px;
+  }
+  .coord-dir-select {
+    flex-shrink: 0;
+    width: 58px;
+    font-family: var(--ui);
+    font-weight: 700;
+    font-size: 16px;
+    padding: 10px 4px;
+    text-align: center;
+    color: var(--warn);
+    border-color: rgba(255,159,10,0.4);
+  }
+  .coord-dir-select:focus { border-color: var(--warn); box-shadow: 0 0 0 2px rgba(255,159,10,0.15); }
 
   /* ── COORDS DISPLAY ── */
   .coords-display {
@@ -425,53 +412,60 @@
   <!-- ═══ TAB COORDS ═══ -->
   <div class="tab-panel active" id="panel-coords">
 
-    <!-- Paste rapide -->
     <div class="card">
-      <div class="card-title">📋 Coller depuis VR</div>
+      <div class="card-title">📍 Position actuelle</div>
       <div class="card-body">
-        <div class="paste-hint">Copie la ligne de coords depuis le journal VR :<br><strong>ex: 10°N 53'20" - 033°W 11'40"</strong></div>
-        <textarea id="paste-input" placeholder="Colle ici les coordonnées VR..." rows="2"></textarea>
-        <button class="parse-btn" onclick="parseCoords()">⚡ Extraire les coordonnées</button>
-      </div>
-    </div>
 
-    <!-- Coords manuelles -->
-    <div class="card">
-      <div class="card-title">🎯 Coordonnées actuelles</div>
-      <div class="card-body">
-        <div class="coords-row">
-          <!-- LAT -->
-          <div class="coord-group">
-            <div class="coord-label">Latitude</div>
-            <div class="coord-input-row">
-              <input class="deg-input" type="number" id="lat_deg" placeholder="10" min="0" max="90" oninput="onCoordsChange()">
-              <span class="coord-sep">°</span>
-              <input class="min-input" type="number" id="lat_min" placeholder="53" min="0" max="59" oninput="onCoordsChange()">
-              <span class="coord-sep">'</span>
-              <input class="sec-input" type="number" id="lat_sec" placeholder="20" min="0" max="59" oninput="onCoordsChange()">
-              <span class="coord-sep">"</span>
-            </div>
-            <select id="lat_ns" onchange="onCoordsChange()" style="margin-top:4px">
-              <option value="N">N — Nord</option>
-              <option value="S">S — Sud</option>
-            </select>
+        <!-- LAT -->
+        <div class="coord-row">
+          <div class="coord-dir-label">LAT</div>
+          <div class="coord-field">
+            <input type="number" id="lat_deg" placeholder="11" min="0" max="90"
+              oninput="onCoordsChange(); autoNext(this,'lat_min',2)">
+            <span class="coord-field-label">degrés °</span>
           </div>
-          <!-- LON -->
-          <div class="coord-group">
-            <div class="coord-label">Longitude</div>
-            <div class="coord-input-row">
-              <input class="deg-input" type="number" id="lon_deg" placeholder="33" min="0" max="180" oninput="onCoordsChange()">
-              <span class="coord-sep">°</span>
-              <input class="min-input" type="number" id="lon_min" placeholder="11" min="0" max="59" oninput="onCoordsChange()">
-              <span class="coord-sep">'</span>
-              <input class="sec-input" type="number" id="lon_sec" placeholder="40" min="0" max="59" oninput="onCoordsChange()">
-              <span class="coord-sep">"</span>
-            </div>
-            <select id="lon_ew" onchange="onCoordsChange()" style="margin-top:4px">
-              <option value="W">W — Ouest</option>
-              <option value="E">E — Est</option>
-            </select>
+          <span class="coord-sep-sym">°</span>
+          <div class="coord-field">
+            <input type="number" id="lat_min" placeholder="14" min="0" max="59"
+              oninput="onCoordsChange(); autoNext(this,'lat_sec',2)">
+            <span class="coord-field-label">minutes '</span>
           </div>
+          <span class="coord-sep-sym">'</span>
+          <div class="coord-field">
+            <input type="number" id="lat_sec" placeholder="15" min="0" max="59"
+              oninput="onCoordsChange()">
+            <span class="coord-field-label">secondes "</span>
+          </div>
+          <select class="coord-dir-select" id="lat_ns" onchange="onCoordsChange()">
+            <option value="N">N</option>
+            <option value="S">S</option>
+          </select>
+        </div>
+
+        <!-- LON -->
+        <div class="coord-row">
+          <div class="coord-dir-label">LON</div>
+          <div class="coord-field">
+            <input type="number" id="lon_deg" placeholder="33" min="0" max="180"
+              oninput="onCoordsChange(); autoNext(this,'lon_min',3)">
+            <span class="coord-field-label">degrés °</span>
+          </div>
+          <span class="coord-sep-sym">°</span>
+          <div class="coord-field">
+            <input type="number" id="lon_min" placeholder="24" min="0" max="59"
+              oninput="onCoordsChange(); autoNext(this,'lon_sec',2)">
+            <span class="coord-field-label">minutes '</span>
+          </div>
+          <span class="coord-sep-sym">'</span>
+          <div class="coord-field">
+            <input type="number" id="lon_sec" placeholder="29" min="0" max="59"
+              oninput="onCoordsChange()">
+            <span class="coord-field-label">secondes "</span>
+          </div>
+          <select class="coord-dir-select" id="lon_ew" onchange="onCoordsChange()">
+            <option value="W">W</option>
+            <option value="E">E</option>
+          </select>
         </div>
 
         <!-- Aperçu -->
@@ -479,6 +473,7 @@
         <div class="status-bar" style="margin-top:8px" id="status-bar">
           <div class="status-chip warn">Position non définie</div>
         </div>
+
       </div>
     </div>
 
@@ -703,51 +698,12 @@ function onOManual() {
 }
 
 /* ═══════════════════════════════════════════════
-   COORDONNÉES — PARSE DEPUIS TEXTE VR
-   Formats supportés :
-   "10°N 53'20" - 033°W 11'40""
-   "10°N - 53'20" / 033°W - 11'40""
-   "10N 53 20 33W 11 40"
+   AUTO-FOCUS : passe au champ suivant quand N chiffres saisis
 ═══════════════════════════════════════════════ */
-function parseCoords() {
-  const raw = document.getElementById('paste-input').value.trim();
-  if (!raw) { showToast('Rien à parser !'); return; }
-
-  // Normalise : enlève les caractères parasites
-  const s = raw.replace(/[""]/g, '"').replace(/['']/g, "'");
-
-  // Regex large pour capturer deg/min/sec et direction
-  // Lat : NNN°X DD'MM" ou NNN°X DD MM
-  const reLat = /(\d{1,3})\s*[°]\s*([NS])[^\d]*(\d{1,2})[^'\d]*(\d{1,2})/i;
-  const reLon = /(\d{1,3})\s*[°]\s*([EW])[^\d]*(\d{1,2})[^'\d]*(\d{1,2})/i;
-
-  // Alternative : format "10°N 53'20""
-  const reLat2 = /(\d{1,3})\s*°\s*([NS])\s+(\d{1,2})\s*'\s*(\d{1,2})/i;
-  const reLon2 = /(\d{1,3})\s*°\s*([EW])\s+(\d{1,2})\s*'\s*(\d{1,2})/i;
-
-  let mLat = s.match(reLat2) || s.match(reLat);
-  let mLon = s.match(reLon2) || s.match(reLon);
-
-  if (!mLat || !mLon) {
-    showToast('Format non reconnu — saisis manuellement');
-    return;
+function autoNext(el, nextId, digits) {
+  if (String(el.value).replace('-','').length >= digits) {
+    document.getElementById(nextId)?.focus();
   }
-
-  state.lat_deg = parseInt(mLat[1]);
-  state.lat_ns  = mLat[2].toUpperCase();
-  state.lat_min = parseInt(mLat[3]);
-  state.lat_sec = parseInt(mLat[4]);
-
-  state.lon_deg = parseInt(mLon[1]);
-  state.lon_ew  = mLon[2].toUpperCase();
-  state.lon_min = parseInt(mLon[3]);
-  state.lon_sec = parseInt(mLon[4]);
-
-  restoreFields();
-  onCoordsChange();
-  saveConfig();
-  document.getElementById('paste-input').value = '';
-  showToast('✓ Coordonnées extraites !');
 }
 
 /* ═══════════════════════════════════════════════
