@@ -24,13 +24,9 @@
     --text2:     #8ba0b8;
     --mono:      'Share Tech Mono', monospace;
     --ui:        'Barlow Condensed', sans-serif;
-
-    /* Codes couleur allures (TWA) — adaptés thème sombre */
-    --twa-upwind:   #ff6b6b;  /* 0-60° près */
-    --twa-reach:    #4ade80;  /* 60-120° travers */
-    --twa-downwind: #22d3ee;  /* 120-180° portant */
-
-    /* Codes couleur voiles (Sail) */
+    --twa-upwind:   #ff6b6b;
+    --twa-reach:    #4ade80;
+    --twa-downwind: #22d3ee;
     --sail-jib:  #f9a8d4;
     --sail-spi:  #c4b5fd;
     --sail-lg:   #fbbf24;
@@ -40,566 +36,151 @@
     --sail-hj:   #fda4af;
     --sail-stay: #d8b4fe;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { background: var(--bg); color: var(--text); font-family: var(--ui); min-height: 100dvh; overflow-x: hidden; padding-bottom: env(safe-area-inset-bottom); }
+  header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 10px 16px 8px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .logo { font-size: 22px; font-weight: 900; letter-spacing: 0.04em; color: var(--accent); text-transform: uppercase; }
+  .logo span { color: var(--text2); font-weight: 400; }
+  .course-badge { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--warn); background: rgba(255,159,10,0.12); border: 1px solid rgba(255,159,10,0.3); border-radius: 4px; padding: 3px 8px; text-transform: uppercase; cursor: pointer; }
+  main { padding: 14px 14px 100px; display: flex; flex-direction: column; gap: 12px; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .card-title { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 8px 14px 6px; border-bottom: 1px solid var(--border); background: var(--bg3); display: flex; justify-content: space-between; align-items: center; }
+  .card-title .meta { font-size: 9px; color: var(--text2); font-family: var(--mono); text-transform: none; letter-spacing: 0; }
+  .card-body { padding: 12px 14px; }
+  input[type="number"], input[type="text"], select { background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: var(--mono); font-size: 15px; padding: 8px 10px; width: 100%; outline: none; -webkit-appearance: none; }
+  input[type="number"]:focus, input[type="text"]:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0,200,255,0.15); }
 
-  body {
-    background: var(--bg);
+  /* ── SELECT COURSE STYLÉ ── */
+  .course-select-wrap {
+    position: relative;
+    margin-bottom: 8px;
+  }
+  .course-select {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
     color: var(--text);
     font-family: var(--ui);
-    min-height: 100dvh;
-    overflow-x: hidden;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  /* ── HEADER ── */
-  header {
-    background: var(--bg2);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 16px 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .logo {
-    font-size: 22px;
-    font-weight: 900;
-    letter-spacing: 0.04em;
-    color: var(--accent);
-    text-transform: uppercase;
-  }
-  .logo span { color: var(--text2); font-weight: 400; }
-  .course-badge {
-    font-size: 11px;
+    font-size: 16px;
     font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--warn);
-    background: rgba(255,159,10,0.12);
-    border: 1px solid rgba(255,159,10,0.3);
-    border-radius: 4px;
-    padding: 3px 8px;
-    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding: 14px 38px 14px 14px;
     cursor: pointer;
-  }
-
-  /* ── MAIN ── */
-  main { padding: 14px 14px 100px; display: flex; flex-direction: column; gap: 12px; }
-
-  /* ── CARDS ── */
-  .card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .card-title {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding: 8px 14px 6px;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg3);
-  }
-  .card-body { padding: 12px 14px; }
-
-  /* ── COORDS INPUT ── */
-  input[type="number"], input[type="text"], select {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 15px;
-    padding: 8px 10px;
-    width: 100%;
-    outline: none;
     -webkit-appearance: none;
+    appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--accent) 50%),
+      linear-gradient(135deg, var(--accent) 50%, transparent 50%);
+    background-position:
+      calc(100% - 18px) 21px,
+      calc(100% - 13px) 21px;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
   }
-  input[type="number"]:focus, input[type="text"]:focus, select:focus {
+  .course-select:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 2px rgba(0,200,255,0.15);
   }
+  .course-select option { background: var(--bg3); color: var(--text); padding: 8px; font-size: 15px; }
+  .course-select optgroup { background: var(--bg2); color: var(--accent); font-weight: 700; font-style: normal; }
+  .course-select option:disabled { color: var(--muted); font-style: italic; }
 
-  .coord-row {
+  .course-current-info {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 6px;
-    margin-bottom: 10px;
+    padding: 6px 10px;
+    background: rgba(0,200,255,0.06);
+    border: 1px solid rgba(0,200,255,0.2);
+    border-radius: 6px;
+    margin-bottom: 8px;
   }
-  .coord-dir-label {
-    font-size: 13px;
-    font-weight: 900;
-    font-family: var(--ui);
-    color: var(--accent);
-    letter-spacing: 0.06em;
-    width: 32px;
-    flex-shrink: 0;
-    text-transform: uppercase;
-  }
-  .coord-field {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    flex: 1;
-  }
-  .coord-field input {
-    text-align: center;
-    font-size: 22px;
-    font-weight: 700;
-    padding: 10px 4px;
-    width: 100%;
-  }
-  .coord-field-label {
-    font-size: 9px;
-    color: var(--muted);
-    font-family: var(--ui);
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .coord-sep-sym {
-    font-family: var(--mono);
-    font-size: 20px;
-    color: var(--muted);
-    flex-shrink: 0;
-    padding-bottom: 16px;
-  }
-  .coord-dir-select {
-    flex-shrink: 0;
-    width: 58px;
-    font-family: var(--ui);
-    font-weight: 700;
-    font-size: 16px;
-    padding: 10px 4px;
-    text-align: center;
-    color: var(--warn);
-    border-color: rgba(255,159,10,0.4);
-  }
+  .course-current-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+  .course-current-slug { font-family: var(--mono); font-size: 13px; color: var(--accent); font-weight: 700; }
+
+  .course-actions { display: flex; gap: 6px; align-items: center; margin-top: 4px; padding-top: 10px; border-top: 1px dashed var(--border); }
+  .course-refresh-btn { background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; color: var(--text2); font-family: var(--ui); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; padding: 6px 12px; cursor: pointer; text-transform: uppercase; transition: all 0.15s; }
+  .course-refresh-btn:active { transform: scale(0.96); background: var(--bg2); }
+  .course-refresh-btn.loading { color: var(--accent); border-color: var(--accent); }
+  .course-meta { font-size: 10px; color: var(--muted); font-family: var(--mono); flex: 1; text-align: right; }
+  .course-meta.fresh { color: var(--accent2); }
+  .course-meta.stale { color: var(--warn); }
+
+  .coord-row { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+  .coord-dir-label { font-size: 13px; font-weight: 900; font-family: var(--ui); color: var(--accent); letter-spacing: 0.06em; width: 32px; flex-shrink: 0; text-transform: uppercase; }
+  .coord-field { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
+  .coord-field input { text-align: center; font-size: 22px; font-weight: 700; padding: 10px 4px; width: 100%; }
+  .coord-field-label { font-size: 9px; color: var(--muted); font-family: var(--ui); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .coord-sep-sym { font-family: var(--mono); font-size: 20px; color: var(--muted); flex-shrink: 0; padding-bottom: 16px; }
+  .coord-dir-select { flex-shrink: 0; width: 58px; font-family: var(--ui); font-weight: 700; font-size: 16px; padding: 10px 4px; text-align: center; color: var(--warn); border-color: rgba(255,159,10,0.4); }
   .coord-dir-select:focus { border-color: var(--warn); box-shadow: 0 0 0 2px rgba(255,159,10,0.15); }
-
-  /* ── COORDS DISPLAY ── */
-  .coords-display {
-    font-family: var(--mono);
-    font-size: 16px;
-    color: var(--accent);
-    letter-spacing: 0.04em;
-    padding: 8px 0 4px;
-  }
+  .coords-display { font-family: var(--mono); font-size: 16px; color: var(--accent); letter-spacing: 0.04em; padding: 8px 0 4px; }
   .coords-display.empty { color: var(--muted); font-size: 13px; }
 
-  /* ── COURSE SELECTOR ── */
-  .course-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
-  }
-  .course-btn {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 7px;
-    color: var(--text2);
-    font-family: var(--ui);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    padding: 10px 8px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.15s;
-    line-height: 1.2;
-  }
-  .course-btn.active {
-    background: rgba(0,200,255,0.12);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  .course-btn:active { transform: scale(0.97); }
-  .course-btn .course-slug {
-    display: block;
-    font-size: 9px;
-    color: var(--muted);
-    margin-top: 2px;
-    font-family: var(--mono);
-  }
-
-  /* ── OPTIONS ── */
-  .options-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-  }
-  .opt-toggle {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 7px;
-    color: var(--text2);
-    font-family: var(--ui);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    padding: 10px 6px;
-    cursor: pointer;
-    text-align: center;
-    text-transform: uppercase;
-    transition: all 0.15s;
-    user-select: none;
-  }
-  .opt-toggle.active {
-    background: rgba(0,255,157,0.1);
-    border-color: var(--accent2);
-    color: var(--accent2);
-  }
+  .options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .opt-toggle { background: var(--bg3); border: 1px solid var(--border); border-radius: 7px; color: var(--text2); font-family: var(--ui); font-size: 12px; font-weight: 700; letter-spacing: 0.06em; padding: 10px 6px; cursor: pointer; text-align: center; text-transform: uppercase; transition: all 0.15s; user-select: none; }
+  .opt-toggle.active { background: rgba(0,255,157,0.1); border-color: var(--accent2); color: var(--accent2); }
   .opt-toggle:active { transform: scale(0.96); }
-  .opt-val {
-    font-size: 9px;
-    font-family: var(--mono);
-    color: var(--muted);
-    display: block;
-    margin-top: 2px;
-  }
+  .opt-val { font-size: 9px; font-family: var(--mono); color: var(--muted); display: block; margin-top: 2px; }
   .opt-val.active-val { color: var(--accent2); }
-
-  .o-value-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 10px;
-    padding: 8px 10px;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 7px;
-  }
+  .o-value-row { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding: 8px 10px; background: var(--bg3); border: 1px solid var(--border); border-radius: 7px; }
   .o-label { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
-  .o-val-display {
-    font-family: var(--mono);
-    font-size: 18px;
-    color: var(--warn);
-    font-weight: 700;
-  }
-  .o-manual {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .o-manual input {
-    width: 60px;
-    font-size: 16px;
-    padding: 5px 8px;
-    text-align: center;
-  }
+  .o-val-display { font-family: var(--mono); font-size: 18px; color: var(--warn); font-weight: 700; }
+  .o-manual { display: flex; align-items: center; gap: 6px; }
+  .o-manual input { width: 60px; font-size: 16px; padding: 5px 8px; text-align: center; }
 
-  /* ── ZEZO BUTTON (FAB) ── */
-  .zezo-fab {
-    position: fixed;
-    bottom: calc(20px + env(safe-area-inset-bottom));
-    left: 50%;
-    transform: translateX(-50%);
-    background: linear-gradient(135deg, #0077aa, #00c8ff);
-    border: none;
-    border-radius: 50px;
-    color: #fff;
-    font-family: var(--ui);
-    font-size: 20px;
-    font-weight: 900;
-    letter-spacing: 0.12em;
-    padding: 16px 48px;
-    cursor: pointer;
-    box-shadow: 0 6px 32px rgba(0,200,255,0.4);
-    text-transform: uppercase;
-    transition: all 0.15s;
-    white-space: nowrap;
-    z-index: 200;
-  }
-  .zezo-fab:active {
-    transform: translateX(-50%) scale(0.96);
-    box-shadow: 0 2px 16px rgba(0,200,255,0.3);
-  }
-  .zezo-fab.disabled {
-    background: linear-gradient(135deg, #1a2332, #2a3a50);
-    color: var(--muted);
-    box-shadow: none;
-  }
-  .zezo-fab .zezo-sub {
-    display: block;
-    font-size: 10px;
-    font-weight: 400;
-    letter-spacing: 0.08em;
-    opacity: 0.8;
-    margin-top: 1px;
-    font-family: var(--mono);
-  }
+  .zezo-fab { position: fixed; bottom: calc(20px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #0077aa, #00c8ff); border: none; border-radius: 50px; color: #fff; font-family: var(--ui); font-size: 20px; font-weight: 900; letter-spacing: 0.12em; padding: 16px 48px; cursor: pointer; box-shadow: 0 6px 32px rgba(0,200,255,0.4); text-transform: uppercase; transition: all 0.15s; white-space: nowrap; z-index: 200; }
+  .zezo-fab:active { transform: translateX(-50%) scale(0.96); box-shadow: 0 2px 16px rgba(0,200,255,0.3); }
+  .zezo-fab.disabled { background: linear-gradient(135deg, #1a2332, #2a3a50); color: var(--muted); box-shadow: none; }
+  .zezo-fab .zezo-sub { display: block; font-size: 10px; font-weight: 400; letter-spacing: 0.08em; opacity: 0.8; margin-top: 1px; font-family: var(--mono); }
 
-  /* ── STATUS ── */
-  .status-bar {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .status-chip {
-    font-size: 11px;
-    font-family: var(--mono);
-    padding: 4px 8px;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    color: var(--text2);
-    background: var(--bg3);
-  }
+  .status-bar { display: flex; gap: 6px; flex-wrap: wrap; }
+  .status-chip { font-size: 11px; font-family: var(--mono); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); color: var(--text2); background: var(--bg3); }
   .status-chip.ok { border-color: var(--accent2); color: var(--accent2); background: rgba(0,255,157,0.07); }
   .status-chip.warn { border-color: var(--warn); color: var(--warn); background: rgba(255,159,10,0.07); }
-
-  /* ── TOAST ── */
-  .toast {
-    position: fixed;
-    top: 70px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-10px);
-    background: var(--bg2);
-    border: 1px solid var(--accent);
-    border-radius: 8px;
-    color: var(--accent);
-    font-family: var(--ui);
-    font-size: 13px;
-    font-weight: 600;
-    padding: 10px 18px;
-    opacity: 0;
-    transition: all 0.3s;
-    z-index: 300;
-    pointer-events: none;
-    white-space: nowrap;
-  }
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  /* ── TABS ── */
-  .tabs {
-    display: flex;
-    background: var(--bg2);
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-    position: sticky;
-    top: 51px;
-    z-index: 99;
-  }
-  .tab-btn {
-    flex-shrink: 0;
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-family: var(--ui);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    padding: 12px 16px;
-    cursor: pointer;
-    text-transform: uppercase;
-    border-bottom: 2px solid transparent;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-  .tab-btn.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
+  .toast { position: fixed; top: 70px; left: 50%; transform: translateX(-50%) translateY(-10px); background: var(--bg2); border: 1px solid var(--accent); border-radius: 8px; color: var(--accent); font-family: var(--ui); font-size: 13px; font-weight: 600; padding: 10px 18px; opacity: 0; transition: all 0.3s; z-index: 300; pointer-events: none; white-space: nowrap; max-width: 90vw; overflow: hidden; text-overflow: ellipsis; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .tabs { display: flex; background: var(--bg2); border-bottom: 1px solid var(--border); overflow-x: auto; position: sticky; top: 51px; z-index: 99; }
+  .tab-btn { flex-shrink: 0; background: none; border: none; color: var(--muted); font-family: var(--ui); font-size: 13px; font-weight: 700; letter-spacing: 0.06em; padding: 12px 16px; cursor: pointer; text-transform: uppercase; border-bottom: 2px solid transparent; transition: all 0.15s; white-space: nowrap; }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
-  /* ═════════════════════════════════════
-     ─── ROUTE TAB ────────────────────────
-     ═════════════════════════════════════ */
-
-  .route-toolbar {
-    display: flex;
-    gap: 8px;
-    align-items: stretch;
-    margin-bottom: 4px;
-  }
-  .route-load-btn {
-    flex: 1;
-    background: linear-gradient(135deg, #0077aa, #00c8ff);
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-family: var(--ui);
-    font-size: 15px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    padding: 12px;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: all 0.15s;
-  }
+  .route-toolbar { display: flex; gap: 8px; align-items: stretch; margin-bottom: 4px; }
+  .route-load-btn { flex: 1; background: linear-gradient(135deg, #0077aa, #00c8ff); border: none; border-radius: 8px; color: #fff; font-family: var(--ui); font-size: 15px; font-weight: 800; letter-spacing: 0.08em; padding: 12px; cursor: pointer; text-transform: uppercase; transition: all 0.15s; }
   .route-load-btn:active { transform: scale(0.97); }
-  .route-load-btn.disabled {
-    background: linear-gradient(135deg, #1a2332, #2a3a50);
-    color: var(--muted);
-    cursor: not-allowed;
-  }
-  .route-load-btn.loading {
-    background: linear-gradient(135deg, #1a2332, #1a2332);
-    color: var(--accent);
-    cursor: wait;
-  }
-
-  .route-summary {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-    margin: 10px 0 12px;
-  }
-  .summary-tile {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 7px;
-    padding: 8px 6px;
-    text-align: center;
-  }
-  .summary-label {
-    font-size: 9px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 700;
-  }
-  .summary-val {
-    font-family: var(--mono);
-    font-size: 16px;
-    color: var(--accent);
-    font-weight: 700;
-    margin-top: 2px;
-  }
-
-  .route-empty, .route-error, .route-loading {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.6;
-  }
+  .route-load-btn.disabled { background: linear-gradient(135deg, #1a2332, #2a3a50); color: var(--muted); cursor: not-allowed; }
+  .route-load-btn.loading { background: linear-gradient(135deg, #1a2332, #1a2332); color: var(--accent); cursor: wait; }
+  .route-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0 12px; }
+  .summary-tile { background: var(--bg3); border: 1px solid var(--border); border-radius: 7px; padding: 8px 6px; text-align: center; }
+  .summary-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+  .summary-val { font-family: var(--mono); font-size: 16px; color: var(--accent); font-weight: 700; margin-top: 2px; }
+  .route-empty, .route-error, .route-loading { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; line-height: 1.6; }
   .route-error { color: var(--danger); }
   .route-loading { color: var(--accent); }
-  .route-empty .big-icon, .route-error .big-icon, .route-loading .big-icon {
-    font-size: 42px;
-    display: block;
-    margin-bottom: 10px;
-  }
-
-  /* spinner */
-  .spinner {
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    border: 3px solid var(--bg3);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-bottom: 10px;
-  }
+  .route-empty .big-icon, .route-error .big-icon, .route-loading .big-icon { font-size: 42px; display: block; margin-bottom: 10px; }
+  .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--bg3); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 10px; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── CARTE POINT DE ROUTE ── */
-  .point-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .point-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 12px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 10px;
-    font-family: var(--mono);
-    font-size: 13px;
-    position: relative;
-  }
-  .point-card::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 8px;
-    bottom: 8px;
-    width: 3px;
-    border-radius: 0 2px 2px 0;
-    background: var(--accent);
-    opacity: 0.6;
-  }
+  .point-list { display: flex; flex-direction: column; gap: 8px; }
+  .point-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px; font-family: var(--mono); font-size: 13px; position: relative; }
+  .point-card::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; border-radius: 0 2px 2px 0; background: var(--accent); opacity: 0.6; }
   .point-card.upwind::before   { background: var(--twa-upwind); }
   .point-card.reach::before    { background: var(--twa-reach); }
   .point-card.downwind::before { background: var(--twa-downwind); }
-
-  .point-header {
-    grid-column: 1 / -1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 6px;
-    margin-bottom: 2px;
-  }
-  .point-date {
-    color: var(--text);
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 0.02em;
-  }
-  .point-ttw {
-    color: var(--warn);
-    font-size: 11px;
-    font-weight: 700;
-    background: rgba(255,159,10,0.1);
-    padding: 2px 7px;
-    border-radius: 3px;
-    border: 1px solid rgba(255,159,10,0.3);
-  }
-
-  .pf {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-  }
-  .pf-label {
-    font-size: 9px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-family: var(--ui);
-    font-weight: 700;
-  }
-  .pf-val {
-    font-family: var(--mono);
-    font-size: 14px;
-    color: var(--text);
-    font-weight: 700;
-  }
+  .point-header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-bottom: 2px; }
+  .point-date { color: var(--text); font-weight: 700; font-size: 13px; }
+  .point-ttw { color: var(--warn); font-size: 11px; font-weight: 700; background: rgba(255,159,10,0.1); padding: 2px 7px; border-radius: 3px; border: 1px solid rgba(255,159,10,0.3); }
+  .pf { display: flex; flex-direction: column; gap: 1px; }
+  .pf-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--ui); font-weight: 700; }
+  .pf-val { font-family: var(--mono); font-size: 14px; color: var(--text); font-weight: 700; }
   .pf-val.accent { color: var(--accent); }
-  .pf-val.speed { color: var(--accent2); }
-  .pf-val.warn  { color: var(--warn); }
-
-  /* TWA colorée par allure */
+  .pf-val.speed  { color: var(--accent2); }
+  .pf-val.warn   { color: var(--warn); }
   .pf-val.twa-upwind   { color: var(--twa-upwind); }
   .pf-val.twa-reach    { color: var(--twa-reach); }
   .pf-val.twa-downwind { color: var(--twa-downwind); }
-
-  /* Sail badge */
-  .sail-badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 4px;
-    font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    color: #000;
-  }
+  .sail-badge { display: inline-block; padding: 3px 10px; border-radius: 4px; font-weight: 700; font-size: 12px; letter-spacing: 0.06em; color: #000; }
   .sail-jib  { background: var(--sail-jib); }
   .sail-spi  { background: var(--sail-spi); }
   .sail-lg   { background: var(--sail-lg); }
@@ -609,17 +190,7 @@
   .sail-hj   { background: var(--sail-hj); }
   .sail-stay { background: var(--sail-stay); }
   .sail-default { background: var(--text2); }
-
-  .legend {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    font-size: 10px;
-    color: var(--muted);
-    padding: 8px 4px 0;
-    border-top: 1px dashed var(--border);
-    margin-top: 8px;
-  }
+  .legend { display: flex; gap: 8px; flex-wrap: wrap; font-size: 10px; color: var(--muted); padding: 8px 4px 0; border-top: 1px dashed var(--border); margin-top: 8px; }
   .legend-item { display: flex; align-items: center; gap: 4px; }
   .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 </style>
@@ -640,77 +211,54 @@
 
 <main>
 
-  <!-- ═══ TAB COORDS ═══ -->
   <div class="tab-panel active" id="panel-coords">
     <div class="card">
       <div class="card-title">📍 Position actuelle</div>
       <div class="card-body">
-        <!-- LAT -->
         <div class="coord-row">
           <div class="coord-dir-label">LAT</div>
-          <div class="coord-field">
-            <input type="number" id="lat_deg" placeholder="11" min="0" max="90"
-              oninput="onCoordsChange(); autoNext(this,'lat_min',2)">
-            <span class="coord-field-label">degrés °</span>
-          </div>
+          <div class="coord-field"><input type="number" id="lat_deg" placeholder="11" min="0" max="90" oninput="onCoordsChange(); autoNext(this,'lat_min',2)"><span class="coord-field-label">degrés °</span></div>
           <span class="coord-sep-sym">°</span>
-          <div class="coord-field">
-            <input type="number" id="lat_min" placeholder="14" min="0" max="59"
-              oninput="onCoordsChange(); autoNext(this,'lat_sec',2)">
-            <span class="coord-field-label">minutes '</span>
-          </div>
+          <div class="coord-field"><input type="number" id="lat_min" placeholder="14" min="0" max="59" oninput="onCoordsChange(); autoNext(this,'lat_sec',2)"><span class="coord-field-label">minutes '</span></div>
           <span class="coord-sep-sym">'</span>
-          <div class="coord-field">
-            <input type="number" id="lat_sec" placeholder="15" min="0" max="59"
-              oninput="onCoordsChange()">
-            <span class="coord-field-label">secondes "</span>
-          </div>
-          <select class="coord-dir-select" id="lat_ns" onchange="onCoordsChange()">
-            <option value="N">N</option>
-            <option value="S">S</option>
-          </select>
+          <div class="coord-field"><input type="number" id="lat_sec" placeholder="15" min="0" max="59" oninput="onCoordsChange()"><span class="coord-field-label">secondes "</span></div>
+          <select class="coord-dir-select" id="lat_ns" onchange="onCoordsChange()"><option value="N">N</option><option value="S">S</option></select>
         </div>
-
-        <!-- LON -->
         <div class="coord-row">
           <div class="coord-dir-label">LON</div>
-          <div class="coord-field">
-            <input type="number" id="lon_deg" placeholder="33" min="0" max="180"
-              oninput="onCoordsChange(); autoNext(this,'lon_min',3)">
-            <span class="coord-field-label">degrés °</span>
-          </div>
+          <div class="coord-field"><input type="number" id="lon_deg" placeholder="33" min="0" max="180" oninput="onCoordsChange(); autoNext(this,'lon_min',3)"><span class="coord-field-label">degrés °</span></div>
           <span class="coord-sep-sym">°</span>
-          <div class="coord-field">
-            <input type="number" id="lon_min" placeholder="24" min="0" max="59"
-              oninput="onCoordsChange(); autoNext(this,'lon_sec',2)">
-            <span class="coord-field-label">minutes '</span>
-          </div>
+          <div class="coord-field"><input type="number" id="lon_min" placeholder="24" min="0" max="59" oninput="onCoordsChange(); autoNext(this,'lon_sec',2)"><span class="coord-field-label">minutes '</span></div>
           <span class="coord-sep-sym">'</span>
-          <div class="coord-field">
-            <input type="number" id="lon_sec" placeholder="29" min="0" max="59"
-              oninput="onCoordsChange()">
-            <span class="coord-field-label">secondes "</span>
-          </div>
-          <select class="coord-dir-select" id="lon_ew" onchange="onCoordsChange()">
-            <option value="W">W</option>
-            <option value="E">E</option>
-          </select>
+          <div class="coord-field"><input type="number" id="lon_sec" placeholder="29" min="0" max="59" oninput="onCoordsChange()"><span class="coord-field-label">secondes "</span></div>
+          <select class="coord-dir-select" id="lon_ew" onchange="onCoordsChange()"><option value="W">W</option><option value="E">E</option></select>
         </div>
-
         <div class="coords-display" id="coords-preview">— Aucune position —</div>
-        <div class="status-bar" style="margin-top:8px" id="status-bar">
-          <div class="status-chip warn">Position non définie</div>
-        </div>
+        <div class="status-bar" style="margin-top:8px" id="status-bar"><div class="status-chip warn">Position non définie</div></div>
       </div>
     </div>
   </div>
 
-  <!-- ═══ TAB CONFIG ═══ -->
   <div class="tab-panel" id="panel-config">
     <div class="card">
-      <div class="card-title">🏆 Course</div>
+      <div class="card-title">🏆 Course<span class="meta" id="course-meta-inline"></span></div>
       <div class="card-body">
-        <div class="course-grid" id="course-grid"></div>
+
+        <div class="course-current-info">
+          <span class="course-current-label">Course sélectionnée</span>
+          <span class="course-current-slug" id="course-current-slug">london</span>
+        </div>
+
+        <div class="course-select-wrap">
+          <select class="course-select" id="course-select" onchange="onCourseSelectChange()">
+            <option>Chargement…</option>
+          </select>
+        </div>
+
+        <div class="course-actions">
+          <button class="course-refresh-btn" id="course-refresh-btn" onclick="manualRefreshCourses()">↻ Actualiser</button>
+          <span class="course-meta" id="course-cache-info">—</span>
+        </div>
       </div>
     </div>
 
@@ -723,8 +271,7 @@
           <span class="o-val-display" id="o-display">0</span>
           <div class="o-manual">
             <span style="font-size:11px;color:var(--muted)">ou manuel :</span>
-            <input type="number" id="o-manual-input" placeholder="34" min="0" max="255"
-              style="width:64px" oninput="onOManual()">
+            <input type="number" id="o-manual-input" placeholder="34" min="0" max="255" style="width:64px" oninput="onOManual()">
           </div>
         </div>
       </div>
@@ -733,60 +280,38 @@
     <div class="card">
       <div class="card-title">👤 User ID VR</div>
       <div class="card-body">
-        <input type="text" id="userid-input" placeholder="5fa6cc43a73ee050184d6672"
-          style="font-size:13px;letter-spacing:0.04em" oninput="saveConfig()">
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">
-          Visible dans l'URL Zezo après ton premier lancement manuel.
-        </div>
+        <input type="text" id="userid-input" placeholder="5fa6cc43a73ee050184d6672" style="font-size:13px;letter-spacing:0.04em" oninput="saveConfig()">
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">Visible dans l'URL Zezo après ton premier lancement manuel.</div>
       </div>
     </div>
   </div>
 
-  <!-- ═══ TAB ROUTE ═══ -->
   <div class="tab-panel" id="panel-route">
     <div class="card">
       <div class="card-title">🧭 Route Zezo</div>
       <div class="card-body">
         <div class="route-toolbar">
-          <button class="route-load-btn disabled" id="route-load-btn" onclick="loadRoute()">
-            Charger la route
-          </button>
+          <button class="route-load-btn disabled" id="route-load-btn" onclick="loadRoute()">Charger la route</button>
         </div>
         <div id="route-summary"></div>
         <div id="route-content">
-          <div class="route-empty">
-            <span class="big-icon">🧭</span>
-            Renseigne ta position et ta course,<br>
-            puis clique sur <strong>Charger la route</strong>.
-          </div>
+          <div class="route-empty"><span class="big-icon">🧭</span>Renseigne ta position et ta course,<br>puis clique sur <strong>Charger la route</strong>.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ═══ TAB ABOUT ═══ -->
   <div class="tab-panel" id="panel-about">
     <div class="card">
       <div class="card-title">ℹ️ ZezoLaunch</div>
       <div class="card-body" style="line-height:1.7;font-size:13px;color:var(--text2)">
-        <p><strong style="color:var(--accent)">ZezoLaunch</strong> est un outil compagnon pour Virtual Regatta Offshore.</p>
-        <br>
+        <p><strong style="color:var(--accent)">ZezoLaunch</strong> est un outil compagnon pour Virtual Regatta Offshore.</p><br>
         <p>1. Copie tes coords depuis le <strong>journal de bord VR</strong></p>
         <p>2. Colle-les dans l'onglet <strong>Position</strong></p>
-        <p>3. Appuie sur <strong>ZEZO</strong> ou consulte directement la <strong>Route</strong></p>
-        <br>
-        <p style="color:var(--muted);font-size:11px">Format coords VR attendu :<br>
-        <code style="color:var(--accent);font-family:var(--mono)">10°N 53'20" - 033°W 11'40"</code></p>
-        <br>
-        <p style="color:var(--muted);font-size:11px">
-          Installe cette page sur ton écran d'accueil :<br>
-          Chrome → ⋮ → <em>Ajouter à l'écran d'accueil</em>
-        </p>
-        <br>
-        <p style="color:var(--muted);font-size:10px;font-family:var(--mono)">
-          ZezoLaunch v1.1 — dashlaulo ecosystem<br>
-          RasTaTranKill66_ALT
-        </p>
+        <p>3. Appuie sur <strong>ZEZO</strong> ou consulte directement la <strong>Route</strong></p><br>
+        <p style="color:var(--muted);font-size:11px">Format coords VR attendu :<br><code style="color:var(--accent);font-family:var(--mono)">10°N 53'20" - 033°W 11'40"</code></p><br>
+        <p style="color:var(--muted);font-size:11px">📋 La liste des courses combine celles affichées par Zezo (officielles, mises à jour auto toutes les 24h) avec des courses connues mais non listées (peut-être archivées).</p><br>
+        <p style="color:var(--muted);font-size:10px;font-family:var(--mono)">ZezoLaunch v1.3 — dashlaulo ecosystem<br>RasTaTranKill66_ALT</p>
       </div>
     </div>
   </div>
@@ -802,22 +327,29 @@
 
 <script>
 /* ═══════════════════════════════════════════════
-   DONNÉES COURSES ZEZO
+   LISTE COMPLETE DES COURSES CONNUES (extra hardcoded)
+   Servira de complément au scraping de zezo.org
 ═══════════════════════════════════════════════ */
-const COURSES = [
-  { label: 'HK → London',   slug: 'london',     name: 'london' },
-  { label: 'Jules Verne',   slug: 'jv',         name: 'jv' },
-  { label: 'Globe 40',      slug: 'globe6',     name: 'globe40' },
-  { label: 'Easter',        slug: 'easter',     name: 'easter' },
-  { label: 'Titanic',       slug: 'titanic',    name: 'titanic' },
-  { label: 'Atlantic',      slug: 'vgas',       name: 'atlantic' },
-  { label: 'Cap Martinique',slug: 'martinique', name: 'martinique' },
-  { label: '1000 Race',     slug: '1000race',   name: '1000race' },
-  { label: 'Med Channel',   slug: 'medchannel', name: 'medchannel' },
-  { label: 'Odyssée',       slug: 'odyssee',    name: 'odyssee' },
-  { label: 'La Pornichet',  slug: 'pornichet',  name: 'pornichet' },
-  { label: 'HyperSail GP2', slug: 'hypersail2', name: 'hypersail' },
+const COURSES_KNOWN = [
+  { slug: 'jv',         label: 'Jules Verne' },
+  { slug: 'london',     label: 'HK to London' },
+  { slug: 'globe6',     label: 'Globe 40 #7' },
+  { slug: 'hypersail2', label: 'HyperSail GP 2' },
+  { slug: 'martinique', label: 'Cap Martinique' },
+  { slug: '1000race',   label: '1000 Race' },
+  { slug: 'odyssee',    label: 'Odyssée Ultim' },
+  { slug: 'medchannel', label: 'Med Channel Race' },
+  { slug: 'rts',        label: 'Road To Summer' },
+  { slug: 'mayo',       label: 'Cinco de Mayo' },
+  // Courses anciennes / saisonnières / spéciales connues
+  { slug: 'easter',     label: 'Easter Race' },
+  { slug: 'titanic',    label: 'Titanic' },
+  { slug: 'vgas',       label: 'Atlantic VGAS' },
+  { slug: 'pornichet',  label: 'La Pornichet Select' },
 ];
+
+const COURSES_CACHE_KEY = 'zezolaunch-courses-v2';
+const COURSES_CACHE_TTL = 24 * 3600 * 1000;
 
 const OPTIONS = [
   { label: 'Full Pack',   bit: 244, full: true },
@@ -828,9 +360,12 @@ const OPTIONS = [
   { label: 'Pro winch',   bit: 4   },
 ];
 
-/* ═══════════════════════════════════════════════
-   STATE
-═══════════════════════════════════════════════ */
+let COURSES_OFFICIAL = [];  // scrapées de zezo.org
+let COURSES_EXTRA = [];     // hardcoded non présentes dans officielles
+let coursesLastFetch = 0;
+let coursesSource = 'unknown';
+let newCoursesDetected = [];
+
 let state = {
   lat_deg: '', lat_min: '', lat_sec: '', lat_ns: 'N',
   lon_deg: '', lon_min: '', lon_sec: '', lon_ew: 'W',
@@ -842,15 +377,21 @@ let state = {
 
 let lastRoutePoints = null;
 
-/* ═══════════════════════════════════════════════
-   INIT
-═══════════════════════════════════════════════ */
-function init() {
+async function init() {
   loadConfig();
-  buildCourseGrid();
   buildOptionsGrid();
   restoreFields();
   updateUI();
+  await refreshCoursesList(false);
+  rebuildCourseLists();
+  buildCourseSelect();
+  updateUI();
+  if (newCoursesDetected.length > 0) {
+    setTimeout(() => {
+      const names = newCoursesDetected.map(c => c.label).join(', ');
+      showToast(`🆕 Nouvelles courses : ${names}`);
+    }, 1000);
+  }
 }
 
 function loadConfig() {
@@ -862,9 +403,7 @@ function loadConfig() {
 
 function saveConfig() {
   state.userid = document.getElementById('userid-input').value.trim() || state.userid;
-  try {
-    localStorage.setItem('zezolaunch-config', JSON.stringify(state));
-  } catch(e) {}
+  try { localStorage.setItem('zezolaunch-config', JSON.stringify(state)); } catch(e) {}
 }
 
 function restoreFields() {
@@ -880,43 +419,229 @@ function restoreFields() {
   document.getElementById('o-manual-input').value = '';
 }
 
-/* ═══════════════════════════════════════════════
-   COURSE / OPTIONS GRID
-═══════════════════════════════════════════════ */
-function buildCourseGrid() {
-  const grid = document.getElementById('course-grid');
-  grid.innerHTML = COURSES.map(c => `
-    <button class="course-btn ${state.course === c.slug ? 'active' : ''}"
-      onclick="selectCourse('${c.slug}', '${c.label}')">
-      ${c.label}
-      <span class="course-slug">${c.slug}</span>
-    </button>
-  `).join('');
+async function refreshCoursesList(force) {
+  if (!force) {
+    try {
+      const cached = JSON.parse(localStorage.getItem(COURSES_CACHE_KEY) || 'null');
+      if (cached && cached.list && (Date.now() - cached.ts) < COURSES_CACHE_TTL) {
+        COURSES_OFFICIAL = cached.list;
+        coursesLastFetch = cached.ts;
+        coursesSource = 'cache';
+        updateCourseCacheInfo();
+        return 'cache';
+      }
+    } catch(e) {}
+  }
+
+  const sources = [
+    { name: 'https-direct', url: 'https://zezo.org/' },
+    { name: 'corsproxy',    url: 'https://corsproxy.io/?' + encodeURIComponent('http://zezo.org/') },
+    { name: 'allorigins',   url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http://zezo.org/') },
+  ];
+
+  let html = null, usedSource = null;
+  for (const src of sources) {
+    try {
+      const res = await fetch(src.url);
+      if (!res.ok) continue;
+      const txt = await res.text();
+      if (txt && txt.includes('chart.pl')) { html = txt; usedSource = src.name; break; }
+    } catch (e) {}
+  }
+
+  let parsedCourses = null;
+  if (html) {
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const selects = doc.querySelectorAll('select');
+      let select = null;
+      for (const s of selects) {
+        const onchange = s.getAttribute('onchange') || '';
+        if (onchange.includes('chart.pl')) { select = s; break; }
+      }
+      if (select) {
+        const opts = Array.from(select.querySelectorAll('option'));
+        parsedCourses = opts.map(opt => ({
+          slug: opt.value.trim(),
+          label: opt.textContent.trim(),
+        })).filter(c => c.slug && c.label);
+      }
+    } catch(e) {}
+  }
+
+  if (parsedCourses && parsedCourses.length > 0) {
+    try {
+      const oldCache = JSON.parse(localStorage.getItem(COURSES_CACHE_KEY) || 'null');
+      if (oldCache && oldCache.list) {
+        const oldSlugs = new Set(oldCache.list.map(c => c.slug));
+        newCoursesDetected = parsedCourses.filter(c => !oldSlugs.has(c.slug));
+      }
+    } catch(e) {}
+
+    COURSES_OFFICIAL = parsedCourses;
+    coursesLastFetch = Date.now();
+    coursesSource = usedSource;
+    try {
+      localStorage.setItem(COURSES_CACHE_KEY, JSON.stringify({
+        ts: coursesLastFetch, list: COURSES_OFFICIAL, source: usedSource,
+      }));
+    } catch(e) {}
+    updateCourseCacheInfo();
+    return 'fresh';
+  }
+
+  try {
+    const cached = JSON.parse(localStorage.getItem(COURSES_CACHE_KEY) || 'null');
+    if (cached && cached.list && cached.list.length > 0) {
+      COURSES_OFFICIAL = cached.list;
+      coursesLastFetch = cached.ts;
+      coursesSource = 'cache-stale';
+      updateCourseCacheInfo();
+      return 'cache-stale';
+    }
+  } catch(e) {}
+
+  COURSES_OFFICIAL = [];
+  coursesLastFetch = 0;
+  coursesSource = 'fallback';
+  updateCourseCacheInfo();
+  return 'fallback';
 }
 
-function selectCourse(slug, label) {
+/* Reconstruit COURSES_EXTRA = celles de COURSES_KNOWN absentes des officielles */
+function rebuildCourseLists() {
+  const officialSlugs = new Set(COURSES_OFFICIAL.map(c => c.slug));
+  COURSES_EXTRA = COURSES_KNOWN.filter(c => !officialSlugs.has(c.slug));
+}
+
+async function manualRefreshCourses() {
+  const btn = document.getElementById('course-refresh-btn');
+  btn.classList.add('loading');
+  btn.textContent = '⏳ Chargement…';
+  const result = await refreshCoursesList(true);
+  rebuildCourseLists();
+  buildCourseSelect();
+  updateUI();
+  btn.classList.remove('loading');
+  btn.textContent = '↻ Actualiser';
+  if (result === 'fresh') {
+    if (newCoursesDetected.length > 0) {
+      const names = newCoursesDetected.map(c => c.label).join(', ');
+      showToast(`🆕 Nouvelles courses : ${names}`);
+    } else {
+      showToast(`✓ Liste à jour (${COURSES_OFFICIAL.length} courses)`);
+    }
+  } else if (result === 'cache-stale') {
+    showToast('⚠️ Zezo injoignable, cache utilisé');
+  } else if (result === 'fallback') {
+    showToast('❌ Liste indisponible, courses connues uniquement');
+  }
+}
+
+function updateCourseCacheInfo() {
+  const info = document.getElementById('course-cache-info');
+  const inline = document.getElementById('course-meta-inline');
+  if (!info) return;
+  const total = COURSES_OFFICIAL.length + COURSES_EXTRA.length;
+  let txt = '', cls = '';
+  const freshSources = ['fresh','https-direct','corsproxy','allorigins'];
+  if (freshSources.includes(coursesSource)) {
+    txt = `${COURSES_OFFICIAL.length} officielles · à jour`; cls = 'course-meta fresh';
+  } else if (coursesSource === 'cache') {
+    const ageMin = Math.floor((Date.now() - coursesLastFetch) / 60000);
+    const ageStr = ageMin < 60 ? `${ageMin}min` : `${Math.floor(ageMin/60)}h`;
+    txt = `${COURSES_OFFICIAL.length} officielles · cache ${ageStr}`; cls = 'course-meta';
+  } else if (coursesSource === 'cache-stale') {
+    txt = `${COURSES_OFFICIAL.length} officielles · cache périmé`; cls = 'course-meta stale';
+  } else if (coursesSource === 'fallback') {
+    txt = `Zezo injoignable`; cls = 'course-meta stale';
+  } else {
+    txt = `${COURSES_OFFICIAL.length} officielles`;
+  }
+  info.textContent = txt;
+  info.className = cls;
+  if (inline) inline.textContent = `${COURSES_OFFICIAL.length + COURSES_EXTRA.length} courses`;
+}
+
+function buildCourseSelect() {
+  const select = document.getElementById('course-select');
+  if (!select) return;
+
+  const newSlugs = new Set(newCoursesDetected.map(c => c.slug));
+  let html = '';
+
+  // Vérifie si la course actuelle existe dans une des listes
+  const allSlugs = new Set([...COURSES_OFFICIAL.map(c => c.slug), ...COURSES_EXTRA.map(c => c.slug)]);
+  const currentInLists = allSlugs.has(state.course);
+
+  // Si la course actuelle n'est dans aucune liste : on l'ajoute en tête comme "personnalisée"
+  if (state.course && !currentInLists) {
+    html += `<optgroup label="⚠️ Course personnalisée">`;
+    html += `<option value="${state.course}" selected>${state.course} (slug)</option>`;
+    html += `</optgroup>`;
+  }
+
+  // Section : courses officielles Zezo
+  if (COURSES_OFFICIAL.length > 0) {
+    html += `<optgroup label="🟢 Officielles Zezo (actives)">`;
+    for (const c of COURSES_OFFICIAL) {
+      const isNew = newSlugs.has(c.slug) ? ' 🆕' : '';
+      const sel = state.course === c.slug ? ' selected' : '';
+      html += `<option value="${c.slug}"${sel}>${escapeHtml(c.label)}${isNew}</option>`;
+    }
+    html += `</optgroup>`;
+  }
+
+  // Section : autres courses connues (non listées par Zezo actuellement)
+  if (COURSES_EXTRA.length > 0) {
+    html += `<optgroup label="⚪ Autres courses connues">`;
+    for (const c of COURSES_EXTRA) {
+      const sel = state.course === c.slug ? ' selected' : '';
+      html += `<option value="${c.slug}"${sel}>${escapeHtml(c.label)}</option>`;
+    }
+    html += `</optgroup>`;
+  }
+
+  if (!html) {
+    html = `<option disabled>Aucune course disponible</option>`;
+  }
+
+  select.innerHTML = html;
+  updateCourseSlugDisplay();
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function onCourseSelectChange() {
+  const select = document.getElementById('course-select');
+  const slug = select.value;
+  if (!slug) return;
+  const label = getCourseLabel(slug);
   state.course = slug;
   saveConfig();
-  buildCourseGrid();
   document.getElementById('course-badge').textContent = label;
+  updateCourseSlugDisplay();
   showToast(`Course : ${label}`);
   updateZezoBtn();
   updateRouteBtn();
+  updateUI();
+}
+
+function updateCourseSlugDisplay() {
+  const el = document.getElementById('course-current-slug');
+  if (el) el.textContent = state.course || '—';
 }
 
 function buildOptionsGrid() {
   const grid = document.getElementById('options-grid');
   grid.innerHTML = OPTIONS.map(opt => {
-    const active = opt.full
-      ? (state.o & 244) === 244
-      : (state.o & opt.bit) !== 0;
-    return `
-      <div class="opt-toggle ${active ? 'active' : ''}"
-        onclick="toggleOption(${opt.bit}, ${!!opt.full})" data-bit="${opt.bit}">
-        ${opt.label}
-        <span class="opt-val ${active ? 'active-val' : ''}">${active ? 'ON' : 'off'}</span>
-      </div>
-    `;
+    const active = opt.full ? (state.o & 244) === 244 : (state.o & opt.bit) !== 0;
+    return `<div class="opt-toggle ${active ? 'active' : ''}" onclick="toggleOption(${opt.bit}, ${!!opt.full})" data-bit="${opt.bit}">${opt.label}<span class="opt-val ${active ? 'active-val' : ''}">${active ? 'ON' : 'off'}</span></div>`;
   }).join('');
   document.getElementById('o-display').textContent = state.o;
 }
@@ -936,22 +661,13 @@ function toggleOption(bit, isFull) {
 
 function onOManual() {
   const v = parseInt(document.getElementById('o-manual-input').value);
-  if (!isNaN(v) && v >= 0 && v <= 255) {
-    state.o = v;
-    saveConfig();
-    buildOptionsGrid();
-  }
+  if (!isNaN(v) && v >= 0 && v <= 255) { state.o = v; saveConfig(); buildOptionsGrid(); }
 }
 
 function autoNext(el, nextId, digits) {
-  if (String(el.value).replace('-','').length >= digits) {
-    document.getElementById(nextId)?.focus();
-  }
+  if (String(el.value).replace('-','').length >= digits) document.getElementById(nextId)?.focus();
 }
 
-/* ═══════════════════════════════════════════════
-   COORDS
-═══════════════════════════════════════════════ */
 function onCoordsChange() {
   state.lat_deg = parseInt(document.getElementById('lat_deg').value) || '';
   state.lat_min = parseInt(document.getElementById('lat_min').value) || '';
@@ -970,34 +686,30 @@ function coordsValid() {
          state.lon_deg !== '' && state.lon_min !== '' && state.lon_sec !== '';
 }
 
-/* ═══════════════════════════════════════════════
-   UI UPDATE
-═══════════════════════════════════════════════ */
 function updateUI() {
   const ok = coordsValid();
   state.coordsReady = ok;
-
   const preview = document.getElementById('coords-preview');
   const statusBar = document.getElementById('status-bar');
-
   if (ok) {
     preview.className = 'coords-display';
-    preview.textContent =
-      `${state.lat_deg}°${state.lat_min}'${state.lat_sec}" ${state.lat_ns}  —  ` +
-      `${String(state.lon_deg).padStart(3,'0')}°${state.lon_min}'${state.lon_sec}" ${state.lon_ew}`;
-    statusBar.innerHTML = `<div class="status-chip ok">✓ Position prête</div>
-      <div class="status-chip">${COURSES.find(c=>c.slug===state.course)?.label || state.course}</div>`;
+    preview.textContent = `${state.lat_deg}°${state.lat_min}'${state.lat_sec}" ${state.lat_ns}  —  ${String(state.lon_deg).padStart(3,'0')}°${state.lon_min}'${state.lon_sec}" ${state.lon_ew}`;
+    statusBar.innerHTML = `<div class="status-chip ok">✓ Position prête</div><div class="status-chip">${getCourseLabel(state.course)}</div>`;
   } else {
     preview.className = 'coords-display empty';
     preview.textContent = '— Aucune position définie —';
     statusBar.innerHTML = `<div class="status-chip warn">Position non définie</div>`;
   }
-
   updateZezoBtn();
   updateRouteBtn();
+  document.getElementById('course-badge').textContent = getCourseLabel(state.course);
+  updateCourseSlugDisplay();
+}
 
-  const course = COURSES.find(c => c.slug === state.course);
-  if (course) document.getElementById('course-badge').textContent = course.label;
+function getCourseLabel(slug) {
+  const all = [...COURSES_OFFICIAL, ...COURSES_EXTRA, ...COURSES_KNOWN];
+  const found = all.find(c => c.slug === slug);
+  return found ? found.label : (slug || '—');
 }
 
 function updateZezoBtn() {
@@ -1006,7 +718,7 @@ function updateZezoBtn() {
   const ok = coordsValid() && state.course;
   if (ok) {
     btn.className = 'zezo-fab';
-    sub.textContent = `${COURSES.find(c=>c.slug===state.course)?.label || state.course} · o=${state.o}`;
+    sub.textContent = `${getCourseLabel(state.course)} · o=${state.o}`;
   } else {
     btn.className = 'zezo-fab disabled';
     sub.textContent = coordsValid() ? 'Sélectionne une course' : 'Définis ta position';
@@ -1020,112 +732,62 @@ function updateRouteBtn() {
   btn.classList.toggle('disabled', !ok);
 }
 
-/* ═══════════════════════════════════════════════
-   URL BUILDER (utilisée par ZEZO et ROUTE)
-═══════════════════════════════════════════════ */
 function buildZezoUrl(proto) {
   const params = new URLSearchParams({
-    st:      '0',
-    lat_deg: state.lat_deg,
-    lat_min: state.lat_min,
-    lat_sec: state.lat_sec,
-    lat_ns:  state.lat_ns,
-    lon_deg: state.lon_deg,
-    lon_min: state.lon_min,
-    lon_sec: state.lon_sec,
-    lon_ew:  state.lon_ew,
-    o:       state.o,
+    st: '0',
+    lat_deg: state.lat_deg, lat_min: state.lat_min, lat_sec: state.lat_sec, lat_ns: state.lat_ns,
+    lon_deg: state.lon_deg, lon_min: state.lon_min, lon_sec: state.lon_sec, lon_ew: state.lon_ew,
+    o: state.o,
   });
   if (state.userid) params.set('userid', state.userid);
   return `${proto}://zezo.org/${state.course}/chart.pl?${params.toString()}`;
 }
 
-/* ═══════════════════════════════════════════════
-   ZEZO LAUNCH (ouverture onglet)
-═══════════════════════════════════════════════ */
 function launchZezo() {
   if (!coordsValid() || !state.course) return;
-  const url = buildZezoUrl('http');
-  window.open(url, '_blank');
+  window.open(buildZezoUrl('http'), '_blank');
   showToast('Zezo ouvert !');
 }
 
-/* ═══════════════════════════════════════════════
-   ─── ROUTE — FETCH & PARSE ─────────────────────
-   ═══════════════════════════════════════════════ */
-
 async function loadRoute() {
-  if (!coordsValid() || !state.course) {
-    showToast('Position ou course manquante');
-    return;
-  }
-
+  if (!coordsValid() || !state.course) { showToast('Position ou course manquante'); return; }
   const btn = document.getElementById('route-load-btn');
   const content = document.getElementById('route-content');
   const summary = document.getElementById('route-summary');
-
   btn.classList.add('loading');
   btn.classList.remove('disabled');
   btn.textContent = 'Chargement…';
   summary.innerHTML = '';
-  content.innerHTML = `
-    <div class="route-loading">
-      <div class="spinner"></div>
-      Récupération de la route depuis Zezo…
-    </div>
-  `;
+  content.innerHTML = `<div class="route-loading"><div class="spinner"></div>Récupération de la route depuis Zezo…</div>`;
 
-  // GitHub Pages = HTTPS forcé → on tente HTTPS d'abord, puis fallback proxy
   const sources = [
     { name: 'direct-https', url: buildZezoUrl('https'), proxy: false },
     { name: 'corsproxy',    url: 'https://corsproxy.io/?' + encodeURIComponent(buildZezoUrl('http')), proxy: true },
     { name: 'allorigins',   url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent(buildZezoUrl('http')), proxy: true },
   ];
 
-  let html = null;
-  let usedSource = null;
-
+  let html = null, usedSource = null;
   for (const src of sources) {
     try {
-      const res = await fetch(src.url, { method: 'GET' });
+      const res = await fetch(src.url);
       if (!res.ok) continue;
       const text = await res.text();
-      if (text && text.includes('dot_layer')) {
-        html = text;
-        usedSource = src.name;
-        break;
-      }
-    } catch (e) {
-      // on essaie le suivant
-    }
+      if (text && text.includes('dot_layer')) { html = text; usedSource = src.name; break; }
+    } catch (e) {}
   }
 
   if (!html) {
     btn.classList.remove('loading');
     btn.textContent = 'Réessayer';
-    content.innerHTML = `
-      <div class="route-error">
-        <span class="big-icon">⚠️</span>
-        Impossible de joindre Zezo.<br>
-        Le site est-il accessible ?<br>
-        <small style="color:var(--muted)">Tu peux toujours utiliser le bouton ZEZO en bas pour ouvrir le site directement.</small>
-      </div>
-    `;
+    content.innerHTML = `<div class="route-error"><span class="big-icon">⚠️</span>Impossible de joindre Zezo.<br><small style="color:var(--muted)">Utilise le bouton ZEZO en bas pour ouvrir le site directement.</small></div>`;
     return;
   }
 
   const points = parseZezoHtml(html);
-
   if (!points || points.length === 0) {
     btn.classList.remove('loading');
     btn.textContent = 'Réessayer';
-    content.innerHTML = `
-      <div class="route-error">
-        <span class="big-icon">❌</span>
-        Aucun point de route trouvé.<br>
-        <small style="color:var(--muted)">Zezo n'a peut-être pas pu router depuis cette position.</small>
-      </div>
-    `;
+    content.innerHTML = `<div class="route-error"><span class="big-icon">❌</span>Aucun point de route trouvé.<br><small style="color:var(--muted)">Zezo n'a peut-être pas pu router depuis cette position.</small></div>`;
     return;
   }
 
@@ -1136,120 +798,56 @@ async function loadRoute() {
   showToast(`${points.length} points chargés${usedSource === 'direct-https' ? '' : ' (proxy)'}`);
 }
 
-/* ═══════════════════════════════════════════════
-   PARSE — extrait les <img class="abs"> de #dot_layer
-═══════════════════════════════════════════════ */
 function parseZezoHtml(html) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
   const dotLayer = doc.getElementById('dot_layer');
   if (!dotLayer) return null;
-
   const imgs = dotLayer.querySelectorAll('img.abs');
   const points = [];
-
   imgs.forEach(img => {
     const mo = img.getAttribute('onmouseover');
     if (!mo) return;
     const p = parsePointTooltip(mo);
     if (p) points.push(p);
   });
-
   return points;
 }
 
-/*
-   Format type d'un onmouseover :
-   "updi(event,'2026-05-11 09:00 UTC (T+ 1:50)<br>Distances:&nbsp;34.7nm/2339.5nm<br>
-    <b>Wind:</b> 57&deg; 10.2 kt (<b>TWA 97&deg;</b>)<br>
-    <b>Heading:</b> 320&deg;<b>Sail:</b> Jib<br>
-    <b>Boat Speed:</b> 18.41 kts','220px')"
-*/
 function parsePointTooltip(mo) {
-  // décode HTML entities
   const decode = s => s.replace(/&nbsp;/g,' ').replace(/&deg;/g,'°').replace(/&amp;/g,'&');
   const raw = decode(mo);
-
   const p = {};
-
-  // Date + heure UTC
   const dm = raw.match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{1,2}):(\d{2})\s+UTC/);
-  if (dm) {
-    p.dateRaw = `${dm[1]}-${dm[2]}-${dm[3]}`;
-    p.timeRaw = `${dm[4].padStart(2,'0')}:${dm[5]}`;
-    p.dateShort = `${dm[3]}/${dm[2]}`;
-  }
-
-  // TTW
+  if (dm) { p.dateRaw = `${dm[1]}-${dm[2]}-${dm[3]}`; p.timeRaw = `${dm[4].padStart(2,'0')}:${dm[5]}`; p.dateShort = `${dm[3]}/${dm[2]}`; }
   const tm = raw.match(/T\+\s*(\d+):(\d{2})/);
   if (tm) p.ttw = `T+${tm[1]}:${tm[2]}`;
-
-  // Distances DTW / DTG
   const dim = raw.match(/Distances:\s*([\d.]+)nm\/([\d.]+)nm/);
-  if (dim) {
-    p.dtw = parseFloat(dim[1]);
-    p.dtg = parseFloat(dim[2]);
-  }
-
-  // Wind: TWD TWS
+  if (dim) { p.dtw = parseFloat(dim[1]); p.dtg = parseFloat(dim[2]); }
   const wm = raw.match(/Wind:\s*<\/?b?>?\s*(-?\d+)°?\s+([\d.]+)\s*kt/i);
-  if (wm) {
-    p.twd = parseInt(wm[1]);
-    p.tws = parseFloat(wm[2]);
-  }
-
-  // TWA
+  if (wm) { p.twd = parseInt(wm[1]); p.tws = parseFloat(wm[2]); }
   const twam = raw.match(/TWA\s*(-?\d+)°?/i);
   if (twam) p.twa = parseInt(twam[1]);
-
-  // Heading (BTW dans Route Zezo)
   const hm = raw.match(/Heading:\s*<\/?b?>?\s*(\d+)°?/i);
   if (hm) p.heading = parseInt(hm[1]);
-
-  // Sail
   const sm = raw.match(/Sail:\s*<\/?b?>?\s*([A-Za-z0-9]+)/i);
   if (sm) p.sail = sm[1];
-
-  // Boat Speed
   const bsm = raw.match(/Boat Speed:\s*<\/?b?>?\s*([\d.]+)\s*kts?/i);
   if (bsm) p.stw = parseFloat(bsm[1]);
-
-  // Validation minimale
   if (!p.dateRaw || p.twa === undefined) return null;
-
   return p;
 }
 
-/* ═══════════════════════════════════════════════
-   RENDER — cartes mobile-friendly
-═══════════════════════════════════════════════ */
 function renderRoute(points) {
-  // Résumé
   const last = points[points.length - 1];
-  const first = points[0];
   const totalH = last.ttw ? last.ttw.replace('T+','') : '?';
-  const dtgStart = first.dtg || 0;
   const dtgEnd = last.dtg || 0;
-  const distance = (dtgStart - dtgEnd).toFixed(0);
-
   document.getElementById('route-summary').innerHTML = `
     <div class="route-summary">
-      <div class="summary-tile">
-        <div class="summary-label">Points</div>
-        <div class="summary-val">${points.length}</div>
-      </div>
-      <div class="summary-tile">
-        <div class="summary-label">Durée</div>
-        <div class="summary-val">${totalH}</div>
-      </div>
-      <div class="summary-tile">
-        <div class="summary-label">DTG fin</div>
-        <div class="summary-val">${dtgEnd}</div>
-      </div>
-    </div>
-  `;
-
-  // Cartes points
+      <div class="summary-tile"><div class="summary-label">Points</div><div class="summary-val">${points.length}</div></div>
+      <div class="summary-tile"><div class="summary-label">Durée</div><div class="summary-val">${totalH}</div></div>
+      <div class="summary-tile"><div class="summary-label">DTG fin</div><div class="summary-val">${dtgEnd}</div></div>
+    </div>`;
   const html = points.map(p => renderPoint(p)).join('') + renderLegend();
   document.getElementById('route-content').innerHTML = `<div class="point-list">${html}</div>`;
 }
@@ -1280,54 +878,24 @@ function renderPoint(p) {
   const sCls = sailClass(p.sail);
   return `
     <div class="point-card ${tCls}">
-      <div class="point-header">
-        <span class="point-date">${p.dateShort || p.dateRaw} · ${p.timeRaw || '—'}</span>
-        <span class="point-ttw">${p.ttw || ''}</span>
-      </div>
-
-      <div class="pf">
-        <span class="pf-label">Wind</span>
-        <span class="pf-val">${p.twd ?? '—'}° · ${p.tws ?? '—'} kt</span>
-      </div>
-      <div class="pf">
-        <span class="pf-label">TWA</span>
-        <span class="pf-val twa-${tCls}">${p.twa ?? '—'}°</span>
-      </div>
-
-      <div class="pf">
-        <span class="pf-label">Sail</span>
-        <span class="sail-badge ${sCls}">${p.sail || '—'}</span>
-      </div>
-      <div class="pf">
-        <span class="pf-label">Speed (STW)</span>
-        <span class="pf-val speed">${p.stw ?? '—'} kt</span>
-      </div>
-
-      <div class="pf">
-        <span class="pf-label">Heading</span>
-        <span class="pf-val accent">${p.heading ?? '—'}°</span>
-      </div>
-      <div class="pf">
-        <span class="pf-label">DTG</span>
-        <span class="pf-val">${p.dtg ?? '—'} nm</span>
-      </div>
-    </div>
-  `;
+      <div class="point-header"><span class="point-date">${p.dateShort || p.dateRaw} · ${p.timeRaw || '—'}</span><span class="point-ttw">${p.ttw || ''}</span></div>
+      <div class="pf"><span class="pf-label">Wind</span><span class="pf-val">${p.twd ?? '—'}° · ${p.tws ?? '—'} kt</span></div>
+      <div class="pf"><span class="pf-label">TWA</span><span class="pf-val twa-${tCls}">${p.twa ?? '—'}°</span></div>
+      <div class="pf"><span class="pf-label">Sail</span><span class="sail-badge ${sCls}">${p.sail || '—'}</span></div>
+      <div class="pf"><span class="pf-label">Speed (STW)</span><span class="pf-val speed">${p.stw ?? '—'} kt</span></div>
+      <div class="pf"><span class="pf-label">Heading</span><span class="pf-val accent">${p.heading ?? '—'}°</span></div>
+      <div class="pf"><span class="pf-label">DTG</span><span class="pf-val">${p.dtg ?? '—'} nm</span></div>
+    </div>`;
 }
 
 function renderLegend() {
-  return `
-    <div class="legend">
-      <div class="legend-item"><span class="legend-dot" style="background:var(--twa-upwind)"></span>Près</div>
-      <div class="legend-item"><span class="legend-dot" style="background:var(--twa-reach)"></span>Travers</div>
-      <div class="legend-item"><span class="legend-dot" style="background:var(--twa-downwind)"></span>Portant</div>
-    </div>
-  `;
+  return `<div class="legend">
+    <div class="legend-item"><span class="legend-dot" style="background:var(--twa-upwind)"></span>Près</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--twa-reach)"></span>Travers</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--twa-downwind)"></span>Portant</div>
+  </div>`;
 }
 
-/* ═══════════════════════════════════════════════
-   TABS + TOAST
-═══════════════════════════════════════════════ */
 function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -1342,7 +910,7 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
 }
 
 init();
