@@ -24,6 +24,21 @@
     --text2:     #8ba0b8;
     --mono:      'Share Tech Mono', monospace;
     --ui:        'Barlow Condensed', sans-serif;
+
+    /* Codes couleur allures (TWA) — adaptés thème sombre */
+    --twa-upwind:   #ff6b6b;  /* 0-60° près */
+    --twa-reach:    #4ade80;  /* 60-120° travers */
+    --twa-downwind: #22d3ee;  /* 120-180° portant */
+
+    /* Codes couleur voiles (Sail) */
+    --sail-jib:  #f9a8d4;
+    --sail-spi:  #c4b5fd;
+    --sail-lg:   #fbbf24;
+    --sail-lj:   #7dd3fc;
+    --sail-c0:   #86efac;
+    --sail-hg:   #fb923c;
+    --sail-hj:   #fda4af;
+    --sail-stay: #d8b4fe;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -71,7 +86,7 @@
   }
 
   /* ── MAIN ── */
-  main { padding: 14px 14px 80px; display: flex; flex-direction: column; gap: 12px; }
+  main { padding: 14px 14px 100px; display: flex; flex-direction: column; gap: 12px; }
 
   /* ── CARDS ── */
   .card {
@@ -92,7 +107,7 @@
   }
   .card-body { padding: 12px 14px; }
 
-  /* ── COORDS INPUT style Zezo ── */
+  /* ── COORDS INPUT ── */
   input[type="number"], input[type="text"], select {
     background: var(--bg3);
     border: 1px solid var(--border);
@@ -250,7 +265,6 @@
   }
   .opt-val.active-val { color: var(--accent2); }
 
-  /* ── O VALUE ── */
   .o-value-row {
     display: flex;
     align-items: center;
@@ -280,7 +294,7 @@
     text-align: center;
   }
 
-  /* ── ZEZO BUTTON ── */
+  /* ── ZEZO BUTTON (FAB) ── */
   .zezo-fab {
     position: fixed;
     bottom: calc(20px + env(safe-area-inset-bottom));
@@ -370,6 +384,9 @@
     background: var(--bg2);
     border-bottom: 1px solid var(--border);
     overflow-x: auto;
+    position: sticky;
+    top: 51px;
+    z-index: 99;
   }
   .tab-btn {
     flex-shrink: 0;
@@ -380,11 +397,12 @@
     font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.06em;
-    padding: 12px 18px;
+    padding: 12px 16px;
     cursor: pointer;
     text-transform: uppercase;
     border-bottom: 2px solid transparent;
     transition: all 0.15s;
+    white-space: nowrap;
   }
   .tab-btn.active {
     color: var(--accent);
@@ -392,6 +410,218 @@
   }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
+
+  /* ═════════════════════════════════════
+     ─── ROUTE TAB ────────────────────────
+     ═════════════════════════════════════ */
+
+  .route-toolbar {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+    margin-bottom: 4px;
+  }
+  .route-load-btn {
+    flex: 1;
+    background: linear-gradient(135deg, #0077aa, #00c8ff);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-family: var(--ui);
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.15s;
+  }
+  .route-load-btn:active { transform: scale(0.97); }
+  .route-load-btn.disabled {
+    background: linear-gradient(135deg, #1a2332, #2a3a50);
+    color: var(--muted);
+    cursor: not-allowed;
+  }
+  .route-load-btn.loading {
+    background: linear-gradient(135deg, #1a2332, #1a2332);
+    color: var(--accent);
+    cursor: wait;
+  }
+
+  .route-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin: 10px 0 12px;
+  }
+  .summary-tile {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 8px 6px;
+    text-align: center;
+  }
+  .summary-label {
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+  }
+  .summary-val {
+    font-family: var(--mono);
+    font-size: 16px;
+    color: var(--accent);
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  .route-empty, .route-error, .route-loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .route-error { color: var(--danger); }
+  .route-loading { color: var(--accent); }
+  .route-empty .big-icon, .route-error .big-icon, .route-loading .big-icon {
+    font-size: 42px;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  /* spinner */
+  .spinner {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--bg3);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 10px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── CARTE POINT DE ROUTE ── */
+  .point-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .point-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 10px;
+    font-family: var(--mono);
+    font-size: 13px;
+    position: relative;
+  }
+  .point-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    border-radius: 0 2px 2px 0;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+  .point-card.upwind::before   { background: var(--twa-upwind); }
+  .point-card.reach::before    { background: var(--twa-reach); }
+  .point-card.downwind::before { background: var(--twa-downwind); }
+
+  .point-header {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+    margin-bottom: 2px;
+  }
+  .point-date {
+    color: var(--text);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+  }
+  .point-ttw {
+    color: var(--warn);
+    font-size: 11px;
+    font-weight: 700;
+    background: rgba(255,159,10,0.1);
+    padding: 2px 7px;
+    border-radius: 3px;
+    border: 1px solid rgba(255,159,10,0.3);
+  }
+
+  .pf {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .pf-label {
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: var(--ui);
+    font-weight: 700;
+  }
+  .pf-val {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 700;
+  }
+  .pf-val.accent { color: var(--accent); }
+  .pf-val.speed { color: var(--accent2); }
+  .pf-val.warn  { color: var(--warn); }
+
+  /* TWA colorée par allure */
+  .pf-val.twa-upwind   { color: var(--twa-upwind); }
+  .pf-val.twa-reach    { color: var(--twa-reach); }
+  .pf-val.twa-downwind { color: var(--twa-downwind); }
+
+  /* Sail badge */
+  .sail-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: #000;
+  }
+  .sail-jib  { background: var(--sail-jib); }
+  .sail-spi  { background: var(--sail-spi); }
+  .sail-lg   { background: var(--sail-lg); }
+  .sail-lj   { background: var(--sail-lj); }
+  .sail-c0   { background: var(--sail-c0); }
+  .sail-hg   { background: var(--sail-hg); }
+  .sail-hj   { background: var(--sail-hj); }
+  .sail-stay { background: var(--sail-stay); }
+  .sail-default { background: var(--text2); }
+
+  .legend {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 10px;
+    color: var(--muted);
+    padding: 8px 4px 0;
+    border-top: 1px dashed var(--border);
+    margin-top: 8px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 4px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 </style>
 </head>
 <body>
@@ -404,6 +634,7 @@
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('coords')" id="tab-coords">📍 Position</button>
   <button class="tab-btn" onclick="switchTab('config')" id="tab-config">⚙️ Config</button>
+  <button class="tab-btn" onclick="switchTab('route')" id="tab-route">🧭 Route</button>
   <button class="tab-btn" onclick="switchTab('about')" id="tab-about">ℹ️ Infos</button>
 </div>
 
@@ -411,11 +642,9 @@
 
   <!-- ═══ TAB COORDS ═══ -->
   <div class="tab-panel active" id="panel-coords">
-
     <div class="card">
       <div class="card-title">📍 Position actuelle</div>
       <div class="card-body">
-
         <!-- LAT -->
         <div class="coord-row">
           <div class="coord-dir-label">LAT</div>
@@ -468,37 +697,27 @@
           </select>
         </div>
 
-        <!-- Aperçu -->
         <div class="coords-display" id="coords-preview">— Aucune position —</div>
         <div class="status-bar" style="margin-top:8px" id="status-bar">
           <div class="status-chip warn">Position non définie</div>
         </div>
-
       </div>
     </div>
-
   </div>
 
   <!-- ═══ TAB CONFIG ═══ -->
   <div class="tab-panel" id="panel-config">
-
-    <!-- Course -->
     <div class="card">
       <div class="card-title">🏆 Course</div>
       <div class="card-body">
-        <div class="course-grid" id="course-grid">
-          <!-- injecté par JS -->
-        </div>
+        <div class="course-grid" id="course-grid"></div>
       </div>
     </div>
 
-    <!-- Options Zezo -->
     <div class="card">
       <div class="card-title">⚙️ Options Zezo</div>
       <div class="card-body">
-        <div class="options-grid" id="options-grid">
-          <!-- injecté par JS -->
-        </div>
+        <div class="options-grid" id="options-grid"></div>
         <div class="o-value-row">
           <span class="o-label">Valeur o=</span>
           <span class="o-val-display" id="o-display">0</span>
@@ -511,7 +730,6 @@
       </div>
     </div>
 
-    <!-- UserID -->
     <div class="card">
       <div class="card-title">👤 User ID VR</div>
       <div class="card-body">
@@ -522,7 +740,28 @@
         </div>
       </div>
     </div>
+  </div>
 
+  <!-- ═══ TAB ROUTE ═══ -->
+  <div class="tab-panel" id="panel-route">
+    <div class="card">
+      <div class="card-title">🧭 Route Zezo</div>
+      <div class="card-body">
+        <div class="route-toolbar">
+          <button class="route-load-btn disabled" id="route-load-btn" onclick="loadRoute()">
+            Charger la route
+          </button>
+        </div>
+        <div id="route-summary"></div>
+        <div id="route-content">
+          <div class="route-empty">
+            <span class="big-icon">🧭</span>
+            Renseigne ta position et ta course,<br>
+            puis clique sur <strong>Charger la route</strong>.
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ═══ TAB ABOUT ═══ -->
@@ -534,7 +773,7 @@
         <br>
         <p>1. Copie tes coords depuis le <strong>journal de bord VR</strong></p>
         <p>2. Colle-les dans l'onglet <strong>Position</strong></p>
-        <p>3. Appuie sur <strong>ZEZO</strong></p>
+        <p>3. Appuie sur <strong>ZEZO</strong> ou consulte directement la <strong>Route</strong></p>
         <br>
         <p style="color:var(--muted);font-size:11px">Format coords VR attendu :<br>
         <code style="color:var(--accent);font-family:var(--mono)">10°N 53'20" - 033°W 11'40"</code></p>
@@ -545,7 +784,7 @@
         </p>
         <br>
         <p style="color:var(--muted);font-size:10px;font-family:var(--mono)">
-          ZezoLaunch v1.0 — dashlaulo ecosystem<br>
+          ZezoLaunch v1.1 — dashlaulo ecosystem<br>
           RasTaTranKill66_ALT
         </p>
       </div>
@@ -554,7 +793,6 @@
 
 </main>
 
-<!-- FAB ZEZO -->
 <button class="zezo-fab disabled" id="zezo-btn" onclick="launchZezo()">
   ZEZO ↗
   <span class="zezo-sub" id="zezo-sub">Définis d'abord ta position</span>
@@ -581,17 +819,8 @@ const COURSES = [
   { label: 'HyperSail GP2', slug: 'hypersail2', name: 'hypersail' },
 ];
 
-/* Options Zezo — bits déduits empiriquement depuis les URLs Zezo réelles
-   Bit 2   = défaut toujours ON (hull polish interne Zezo)
-   Bit 4   = Pro winches
-   Bit 16  = Foils
-   Bit 32  = Light sails
-   Bit 64  = C0 (Reaching)
-   Bit 128 = Heavy sails
-   Full Pack = 246 (2+4+16+32+64+128)
-*/
 const OPTIONS = [
-  { label: 'Full Pack',   bit: 244, full: true },  // 244 = 4+16+32+64+128 (bit2 toujours ON)
+  { label: 'Full Pack',   bit: 244, full: true },
   { label: 'C0',          bit: 64  },
   { label: 'Light sails', bit: 32  },
   { label: 'Heavy sails', bit: 128 },
@@ -610,6 +839,8 @@ let state = {
   userid: '5fa6cc43a73ee050184d6672',
   coordsReady: false,
 };
+
+let lastRoutePoints = null;
 
 /* ═══════════════════════════════════════════════
    INIT
@@ -650,7 +881,7 @@ function restoreFields() {
 }
 
 /* ═══════════════════════════════════════════════
-   COURSE GRID
+   COURSE / OPTIONS GRID
 ═══════════════════════════════════════════════ */
 function buildCourseGrid() {
   const grid = document.getElementById('course-grid');
@@ -670,11 +901,9 @@ function selectCourse(slug, label) {
   document.getElementById('course-badge').textContent = label;
   showToast(`Course : ${label}`);
   updateZezoBtn();
+  updateRouteBtn();
 }
 
-/* ═══════════════════════════════════════════════
-   OPTIONS GRID
-═══════════════════════════════════════════════ */
 function buildOptionsGrid() {
   const grid = document.getElementById('options-grid');
   grid.innerHTML = OPTIONS.map(opt => {
@@ -694,13 +923,12 @@ function buildOptionsGrid() {
 
 function toggleOption(bit, isFull) {
   if (isFull) {
-    // Full Pack = tout coché (246) ou tout décoché (2 = défaut minimal)
-    const allBits = 244; // 4+16+32+64+128
+    const allBits = 244;
     const isFullOn = (state.o & allBits) === allBits;
-    state.o = isFullOn ? 2 : 246; // 2 = défaut minimal, 246 = tout
+    state.o = isFullOn ? 2 : 246;
   } else {
-    state.o = (state.o | 2) ^ bit; // bit 2 toujours présent
-    if ((state.o & bit) === 0) state.o |= 2; // s'assurer que bit2 reste
+    state.o = (state.o | 2) ^ bit;
+    if ((state.o & bit) === 0) state.o |= 2;
   }
   saveConfig();
   buildOptionsGrid();
@@ -715,9 +943,6 @@ function onOManual() {
   }
 }
 
-/* ═══════════════════════════════════════════════
-   AUTO-FOCUS : passe au champ suivant quand N chiffres saisis
-═══════════════════════════════════════════════ */
 function autoNext(el, nextId, digits) {
   if (String(el.value).replace('-','').length >= digits) {
     document.getElementById(nextId)?.focus();
@@ -725,7 +950,7 @@ function autoNext(el, nextId, digits) {
 }
 
 /* ═══════════════════════════════════════════════
-   COORDONNÉES — SAISIE MANUELLE
+   COORDS
 ═══════════════════════════════════════════════ */
 function onCoordsChange() {
   state.lat_deg = parseInt(document.getElementById('lat_deg').value) || '';
@@ -736,7 +961,6 @@ function onCoordsChange() {
   state.lon_min = parseInt(document.getElementById('lon_min').value) || '';
   state.lon_sec = parseInt(document.getElementById('lon_sec').value) || '';
   state.lon_ew  = document.getElementById('lon_ew').value;
-
   saveConfig();
   updateUI();
 }
@@ -770,8 +994,8 @@ function updateUI() {
   }
 
   updateZezoBtn();
+  updateRouteBtn();
 
-  // Badge course
   const course = COURSES.find(c => c.slug === state.course);
   if (course) document.getElementById('course-badge').textContent = course.label;
 }
@@ -780,7 +1004,6 @@ function updateZezoBtn() {
   const btn = document.getElementById('zezo-btn');
   const sub = document.getElementById('zezo-sub');
   const ok = coordsValid() && state.course;
-
   if (ok) {
     btn.className = 'zezo-fab';
     sub.textContent = `${COURSES.find(c=>c.slug===state.course)?.label || state.course} · o=${state.o}`;
@@ -790,12 +1013,17 @@ function updateZezoBtn() {
   }
 }
 
-/* ═══════════════════════════════════════════════
-   ZEZO LAUNCH
-═══════════════════════════════════════════════ */
-function launchZezo() {
-  if (!coordsValid() || !state.course) return;
+function updateRouteBtn() {
+  const btn = document.getElementById('route-load-btn');
+  if (!btn) return;
+  const ok = coordsValid() && state.course;
+  btn.classList.toggle('disabled', !ok);
+}
 
+/* ═══════════════════════════════════════════════
+   URL BUILDER (utilisée par ZEZO et ROUTE)
+═══════════════════════════════════════════════ */
+function buildZezoUrl(proto) {
   const params = new URLSearchParams({
     st:      '0',
     lat_deg: state.lat_deg,
@@ -808,27 +1036,306 @@ function launchZezo() {
     lon_ew:  state.lon_ew,
     o:       state.o,
   });
-
   if (state.userid) params.set('userid', state.userid);
+  return `${proto}://zezo.org/${state.course}/chart.pl?${params.toString()}`;
+}
 
-  const url = `http://zezo.org/${state.course}/chart.pl?${params.toString()}`;
+/* ═══════════════════════════════════════════════
+   ZEZO LAUNCH (ouverture onglet)
+═══════════════════════════════════════════════ */
+function launchZezo() {
+  if (!coordsValid() || !state.course) return;
+  const url = buildZezoUrl('http');
   window.open(url, '_blank');
   showToast('Zezo ouvert !');
 }
 
 /* ═══════════════════════════════════════════════
-   TABS
+   ─── ROUTE — FETCH & PARSE ─────────────────────
+   ═══════════════════════════════════════════════ */
+
+async function loadRoute() {
+  if (!coordsValid() || !state.course) {
+    showToast('Position ou course manquante');
+    return;
+  }
+
+  const btn = document.getElementById('route-load-btn');
+  const content = document.getElementById('route-content');
+  const summary = document.getElementById('route-summary');
+
+  btn.classList.add('loading');
+  btn.classList.remove('disabled');
+  btn.textContent = 'Chargement…';
+  summary.innerHTML = '';
+  content.innerHTML = `
+    <div class="route-loading">
+      <div class="spinner"></div>
+      Récupération de la route depuis Zezo…
+    </div>
+  `;
+
+  // GitHub Pages = HTTPS forcé → on tente HTTPS d'abord, puis fallback proxy
+  const sources = [
+    { name: 'direct-https', url: buildZezoUrl('https'), proxy: false },
+    { name: 'corsproxy',    url: 'https://corsproxy.io/?' + encodeURIComponent(buildZezoUrl('http')), proxy: true },
+    { name: 'allorigins',   url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent(buildZezoUrl('http')), proxy: true },
+  ];
+
+  let html = null;
+  let usedSource = null;
+
+  for (const src of sources) {
+    try {
+      const res = await fetch(src.url, { method: 'GET' });
+      if (!res.ok) continue;
+      const text = await res.text();
+      if (text && text.includes('dot_layer')) {
+        html = text;
+        usedSource = src.name;
+        break;
+      }
+    } catch (e) {
+      // on essaie le suivant
+    }
+  }
+
+  if (!html) {
+    btn.classList.remove('loading');
+    btn.textContent = 'Réessayer';
+    content.innerHTML = `
+      <div class="route-error">
+        <span class="big-icon">⚠️</span>
+        Impossible de joindre Zezo.<br>
+        Le site est-il accessible ?<br>
+        <small style="color:var(--muted)">Tu peux toujours utiliser le bouton ZEZO en bas pour ouvrir le site directement.</small>
+      </div>
+    `;
+    return;
+  }
+
+  const points = parseZezoHtml(html);
+
+  if (!points || points.length === 0) {
+    btn.classList.remove('loading');
+    btn.textContent = 'Réessayer';
+    content.innerHTML = `
+      <div class="route-error">
+        <span class="big-icon">❌</span>
+        Aucun point de route trouvé.<br>
+        <small style="color:var(--muted)">Zezo n'a peut-être pas pu router depuis cette position.</small>
+      </div>
+    `;
+    return;
+  }
+
+  lastRoutePoints = points;
+  renderRoute(points);
+  btn.classList.remove('loading');
+  btn.textContent = '↻ Recharger la route';
+  showToast(`${points.length} points chargés${usedSource === 'direct-https' ? '' : ' (proxy)'}`);
+}
+
+/* ═══════════════════════════════════════════════
+   PARSE — extrait les <img class="abs"> de #dot_layer
+═══════════════════════════════════════════════ */
+function parseZezoHtml(html) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const dotLayer = doc.getElementById('dot_layer');
+  if (!dotLayer) return null;
+
+  const imgs = dotLayer.querySelectorAll('img.abs');
+  const points = [];
+
+  imgs.forEach(img => {
+    const mo = img.getAttribute('onmouseover');
+    if (!mo) return;
+    const p = parsePointTooltip(mo);
+    if (p) points.push(p);
+  });
+
+  return points;
+}
+
+/*
+   Format type d'un onmouseover :
+   "updi(event,'2026-05-11 09:00 UTC (T+ 1:50)<br>Distances:&nbsp;34.7nm/2339.5nm<br>
+    <b>Wind:</b> 57&deg; 10.2 kt (<b>TWA 97&deg;</b>)<br>
+    <b>Heading:</b> 320&deg;<b>Sail:</b> Jib<br>
+    <b>Boat Speed:</b> 18.41 kts','220px')"
+*/
+function parsePointTooltip(mo) {
+  // décode HTML entities
+  const decode = s => s.replace(/&nbsp;/g,' ').replace(/&deg;/g,'°').replace(/&amp;/g,'&');
+  const raw = decode(mo);
+
+  const p = {};
+
+  // Date + heure UTC
+  const dm = raw.match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{1,2}):(\d{2})\s+UTC/);
+  if (dm) {
+    p.dateRaw = `${dm[1]}-${dm[2]}-${dm[3]}`;
+    p.timeRaw = `${dm[4].padStart(2,'0')}:${dm[5]}`;
+    p.dateShort = `${dm[3]}/${dm[2]}`;
+  }
+
+  // TTW
+  const tm = raw.match(/T\+\s*(\d+):(\d{2})/);
+  if (tm) p.ttw = `T+${tm[1]}:${tm[2]}`;
+
+  // Distances DTW / DTG
+  const dim = raw.match(/Distances:\s*([\d.]+)nm\/([\d.]+)nm/);
+  if (dim) {
+    p.dtw = parseFloat(dim[1]);
+    p.dtg = parseFloat(dim[2]);
+  }
+
+  // Wind: TWD TWS
+  const wm = raw.match(/Wind:\s*<\/?b?>?\s*(-?\d+)°?\s+([\d.]+)\s*kt/i);
+  if (wm) {
+    p.twd = parseInt(wm[1]);
+    p.tws = parseFloat(wm[2]);
+  }
+
+  // TWA
+  const twam = raw.match(/TWA\s*(-?\d+)°?/i);
+  if (twam) p.twa = parseInt(twam[1]);
+
+  // Heading (BTW dans Route Zezo)
+  const hm = raw.match(/Heading:\s*<\/?b?>?\s*(\d+)°?/i);
+  if (hm) p.heading = parseInt(hm[1]);
+
+  // Sail
+  const sm = raw.match(/Sail:\s*<\/?b?>?\s*([A-Za-z0-9]+)/i);
+  if (sm) p.sail = sm[1];
+
+  // Boat Speed
+  const bsm = raw.match(/Boat Speed:\s*<\/?b?>?\s*([\d.]+)\s*kts?/i);
+  if (bsm) p.stw = parseFloat(bsm[1]);
+
+  // Validation minimale
+  if (!p.dateRaw || p.twa === undefined) return null;
+
+  return p;
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER — cartes mobile-friendly
+═══════════════════════════════════════════════ */
+function renderRoute(points) {
+  // Résumé
+  const last = points[points.length - 1];
+  const first = points[0];
+  const totalH = last.ttw ? last.ttw.replace('T+','') : '?';
+  const dtgStart = first.dtg || 0;
+  const dtgEnd = last.dtg || 0;
+  const distance = (dtgStart - dtgEnd).toFixed(0);
+
+  document.getElementById('route-summary').innerHTML = `
+    <div class="route-summary">
+      <div class="summary-tile">
+        <div class="summary-label">Points</div>
+        <div class="summary-val">${points.length}</div>
+      </div>
+      <div class="summary-tile">
+        <div class="summary-label">Durée</div>
+        <div class="summary-val">${totalH}</div>
+      </div>
+      <div class="summary-tile">
+        <div class="summary-label">DTG fin</div>
+        <div class="summary-val">${dtgEnd}</div>
+      </div>
+    </div>
+  `;
+
+  // Cartes points
+  const html = points.map(p => renderPoint(p)).join('') + renderLegend();
+  document.getElementById('route-content').innerHTML = `<div class="point-list">${html}</div>`;
+}
+
+function twaClass(twa) {
+  const abs = Math.abs(twa);
+  if (abs < 60)  return 'upwind';
+  if (abs < 120) return 'reach';
+  return 'downwind';
+}
+
+function sailClass(sail) {
+  if (!sail) return 'sail-default';
+  const s = sail.toLowerCase();
+  if (s === 'jib')  return 'sail-jib';
+  if (s === 'spi')  return 'sail-spi';
+  if (s === 'lg')   return 'sail-lg';
+  if (s === 'lj')   return 'sail-lj';
+  if (s === 'c0')   return 'sail-c0';
+  if (s === 'hg')   return 'sail-hg';
+  if (s === 'hj')   return 'sail-hj';
+  if (s === 'stay') return 'sail-stay';
+  return 'sail-default';
+}
+
+function renderPoint(p) {
+  const tCls = twaClass(p.twa);
+  const sCls = sailClass(p.sail);
+  return `
+    <div class="point-card ${tCls}">
+      <div class="point-header">
+        <span class="point-date">${p.dateShort || p.dateRaw} · ${p.timeRaw || '—'}</span>
+        <span class="point-ttw">${p.ttw || ''}</span>
+      </div>
+
+      <div class="pf">
+        <span class="pf-label">Wind</span>
+        <span class="pf-val">${p.twd ?? '—'}° · ${p.tws ?? '—'} kt</span>
+      </div>
+      <div class="pf">
+        <span class="pf-label">TWA</span>
+        <span class="pf-val twa-${tCls}">${p.twa ?? '—'}°</span>
+      </div>
+
+      <div class="pf">
+        <span class="pf-label">Sail</span>
+        <span class="sail-badge ${sCls}">${p.sail || '—'}</span>
+      </div>
+      <div class="pf">
+        <span class="pf-label">Speed (STW)</span>
+        <span class="pf-val speed">${p.stw ?? '—'} kt</span>
+      </div>
+
+      <div class="pf">
+        <span class="pf-label">Heading</span>
+        <span class="pf-val accent">${p.heading ?? '—'}°</span>
+      </div>
+      <div class="pf">
+        <span class="pf-label">DTG</span>
+        <span class="pf-val">${p.dtg ?? '—'} nm</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderLegend() {
+  return `
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:var(--twa-upwind)"></span>Près</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--twa-reach)"></span>Travers</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--twa-downwind)"></span>Portant</div>
+    </div>
+  `;
+}
+
+/* ═══════════════════════════════════════════════
+   TABS + TOAST
 ═══════════════════════════════════════════════ */
 function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.getElementById('tab-' + name)?.classList.add('active');
   document.getElementById('panel-' + name)?.classList.add('active');
+  if (name === 'route') updateRouteBtn();
 }
 
-/* ═══════════════════════════════════════════════
-   TOAST
-═══════════════════════════════════════════════ */
 let toastTimer = null;
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -838,9 +1345,6 @@ function showToast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-/* ═══════════════════════════════════════════════
-   START
-═══════════════════════════════════════════════ */
 init();
 </script>
 </body>
