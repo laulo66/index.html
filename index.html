@@ -418,6 +418,19 @@ input[type="number"]:focus, input[type="text"]:focus, select:focus { border-colo
 .legend-item { display: flex; align-items: center; gap: 4px; }
 .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 
+/* ── PROFIL EXPORT/IMPORT ── */
+.profile-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  width: calc(50% - 3px); background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text2); font-family: var(--ui); font-size: 12px;
+  font-weight: 700; letter-spacing: 0.06em; padding: 10px 8px; cursor: pointer;
+  text-transform: uppercase; transition: all 0.15s; text-align: center;
+}
+.profile-btn:active { transform: scale(0.96); }
+.profile-btn.export { border-color: var(--accent); color: var(--accent); }
+.profile-btn.import { border-color: var(--accent2); color: var(--accent2); }
+#import-file { display: none; }
+
 /* ── TOAST ── */
 .toast { position: fixed; top: 64px; left: 50%; transform: translateX(-50%) translateY(-10px); background: var(--bg2); border: 1px solid var(--accent); border-radius: 8px; color: var(--accent); font-family: var(--ui); font-size: 12px; font-weight: 600; padding: 8px 16px; opacity: 0; transition: all 0.3s; z-index: 400; pointer-events: none; white-space: nowrap; max-width: 92vw; overflow: hidden; text-overflow: ellipsis; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -595,13 +608,27 @@ input[type="number"]:focus, input[type="text"]:focus, select:focus { border-colo
         <p style="color:var(--muted);font-size:11px">Format coords VR :<br><code style="color:var(--accent);font-family:var(--mono)">10°N 53'20" - 033°W 11'40"</code></p><br>
         <p style="color:var(--muted);font-size:11px">🎨 Bouton <strong>🎨</strong> (header) → Thèmes & Fuseau</p><br>
         <p style="color:var(--muted);font-size:11px">📋 Courses mises à jour auto depuis zezo.org (cache 24h).</p><br>
+
+        <!-- PROFIL EXPORT/IMPORT -->
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:10px">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;font-weight:700;margin-bottom:8px">⚙️ Synchroniser mes réglages</div>
+          <p style="font-size:11px;color:var(--text2);margin-bottom:10px">Exporte tes réglages (thème, fuseau, course, userid, O=) pour les retrouver sur un autre appareil ou navigateur.</p>
+          <div style="display:flex;gap:6px;margin-bottom:4px">
+            <button class="profile-btn export" onclick="exportProfile()">📤 Exporter</button>
+            <button class="profile-btn import" onclick="document.getElementById('import-file').click()">📥 Importer</button>
+          </div>
+          <input type="file" id="import-file" accept=".json" onchange="importProfile(event)">
+          <div id="import-status" style="font-size:10px;color:var(--accent2);margin-top:4px;font-family:var(--mono);min-height:14px"></div>
+        </div>
+
         <!-- LIEN PARTAGE -->
         <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:10px">
           <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;font-weight:700;margin-bottom:6px">🔗 Partager ZezoLaunch</div>
           <div style="font-family:var(--mono);font-size:11px;color:var(--accent);word-break:break-all;margin-bottom:8px" id="share-url">https://laulo66.github.io/zezo-launch.html/</div>
           <button onclick="copyShareUrl()" id="copy-btn" style="background:var(--accent);border:none;border-radius:6px;color:#000;font-family:var(--ui);font-size:12px;font-weight:800;padding:7px 16px;cursor:pointer;letter-spacing:0.06em;width:100%">📋 Copier le lien</button>
         </div>
-        <p style="color:var(--muted);font-size:10px;font-family:var(--mono)">ZezoLaunch v1.4 — dashlaulo ecosystem<br>RasTaTranKill66_Alta</p>
+
+        <p style="color:var(--muted);font-size:10px;font-family:var(--mono)">ZezoLaunch v1.4.3 — dashlaulo ecosystem<br>RasTaTranKill66_Alta</p>
       </div>
     </div>
   </div>
@@ -1351,6 +1378,19 @@ function onTzChange() {
   if (lastRoutePoints) renderRoute(lastRoutePoints);
 }
 
+/* ── PROFIL EXPORT/IMPORT ── */
+.profile-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  width: calc(50% - 3px); background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text2); font-family: var(--ui); font-size: 12px;
+  font-weight: 700; letter-spacing: 0.06em; padding: 10px 8px; cursor: pointer;
+  text-transform: uppercase; transition: all 0.15s; text-align: center;
+}
+.profile-btn:active { transform: scale(0.96); }
+.profile-btn.export { border-color: var(--accent); color: var(--accent); }
+.profile-btn.import { border-color: var(--accent2); color: var(--accent2); }
+#import-file { display: none; }
+
 /* ── TOAST ── */
 let toastTimer = null;
 function showToast(msg) {
@@ -1382,6 +1422,64 @@ function copyShareUrl() {
     document.body.removeChild(el);
     showToast('Lien copié !');
   });
+}
+
+/* ══════════════════════════════════════
+   EXPORT / IMPORT PROFIL
+══════════════════════════════════════ */
+function exportProfile() {
+  const profile = {
+    version: '1.4.3',
+    exported: new Date().toISOString(),
+    settings: {
+      theme:   state.theme,
+      tz:      state.tz,
+      course:  state.course,
+      o:       state.o,
+      userid:  state.userid,
+    }
+  };
+  const json = JSON.stringify(profile, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `zezolaunch-profil-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('✅ Profil exporté !');
+}
+
+function importProfile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const profile = JSON.parse(e.target.result);
+      if (!profile.settings) throw new Error('Format invalide');
+      const s = profile.settings;
+      // Applique les réglages
+      if (s.theme)  { state.theme  = s.theme;  applyTheme(s.theme, false); }
+      if (s.tz)     { state.tz     = s.tz;     document.getElementById('tz-select').value = s.tz; document.getElementById('tz-modal-select').value = s.tz; }
+      if (s.course) { state.course = s.course; }
+      if (s.o !== undefined) { state.o = s.o; buildOptionsGrid(); }
+      if (s.userid) { state.userid = s.userid; document.getElementById('userid-input').value = s.userid; }
+      saveConfig();
+      buildCourseSelect();
+      updateUI();
+      const statusEl = document.getElementById('import-status');
+      if (statusEl) statusEl.textContent = `✅ Importé depuis ${profile.exported?.slice(0,10) || 'fichier'}`;
+      showToast('✅ Profil importé !');
+    } catch(err) {
+      const statusEl = document.getElementById('import-status');
+      if (statusEl) statusEl.textContent = '❌ Fichier invalide';
+      showToast('❌ Échec import — fichier invalide');
+    }
+    // Reset l'input pour pouvoir réimporter le même fichier
+    event.target.value = '';
+  };
+  reader.readAsText(file);
 }
 
 init();
