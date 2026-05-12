@@ -452,19 +452,22 @@ input[type="number"]:focus, input[type="text"]:focus, select:focus { border-colo
           <div class="coord-dir-label">LAT</div>
           <div class="coord-field">
             <input type="number" id="lat_deg" placeholder="18" min="0" max="90"
-              oninput="onCoordsChange()" onkeydown="coordKeyDown(event,'lat_min')">
+              oninput="onCoordsChange(); autoJump(this,'lat_min',99)"
+              onkeydown="coordKeyDown(event,'lat_min')">
             <span class="coord-field-label">degrés °</span>
           </div>
           <span class="coord-sep-sym">°</span>
           <div class="coord-field">
             <input type="number" id="lat_min" placeholder="46" min="0" max="59"
-              oninput="onCoordsChange()" onkeydown="coordKeyDown(event,'lat_sec')">
+              oninput="onCoordsChange(); autoJump(this,'lat_sec',59)"
+              onkeydown="coordKeyDown(event,'lat_sec')">
             <span class="coord-field-label">minutes '</span>
           </div>
           <span class="coord-sep-sym">'</span>
           <div class="coord-field">
             <input type="number" id="lat_sec" placeholder="36" min="0" max="59"
-              oninput="onCoordsChange()" onkeydown="coordKeyDown(event,'lon_deg')">
+              oninput="onCoordsChange(); autoJump(this,'lon_deg',59)"
+              onkeydown="coordKeyDown(event,'lon_deg')">
             <span class="coord-field-label">secondes "</span>
           </div>
           <select class="coord-dir-select" id="lat_ns" onchange="onCoordsChange()">
@@ -476,13 +479,15 @@ input[type="number"]:focus, input[type="text"]:focus, select:focus { border-colo
           <div class="coord-dir-label">LON</div>
           <div class="coord-field">
             <input type="number" id="lon_deg" placeholder="38" min="0" max="180"
-              oninput="onCoordsChange()" onkeydown="coordKeyDown(event,'lon_min')">
+              oninput="onCoordsChange(); autoJump(this,'lon_min',99)"
+              onkeydown="coordKeyDown(event,'lon_min')">
             <span class="coord-field-label">degrés °</span>
           </div>
           <span class="coord-sep-sym">°</span>
           <div class="coord-field">
             <input type="number" id="lon_min" placeholder="19" min="0" max="59"
-              oninput="onCoordsChange()" onkeydown="coordKeyDown(event,'lon_sec')">
+              oninput="onCoordsChange(); autoJump(this,'lon_sec',59)"
+              onkeydown="coordKeyDown(event,'lon_sec')">
             <span class="coord-field-label">minutes '</span>
           </div>
           <span class="coord-sep-sym">'</span>
@@ -590,6 +595,12 @@ input[type="number"]:focus, input[type="text"]:focus, select:focus { border-colo
         <p style="color:var(--muted);font-size:11px">Format coords VR :<br><code style="color:var(--accent);font-family:var(--mono)">10°N 53'20" - 033°W 11'40"</code></p><br>
         <p style="color:var(--muted);font-size:11px">🎨 Bouton <strong>🎨</strong> (header) → Thèmes & Fuseau</p><br>
         <p style="color:var(--muted);font-size:11px">📋 Courses mises à jour auto depuis zezo.org (cache 24h).</p><br>
+        <!-- LIEN PARTAGE -->
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:10px">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;font-weight:700;margin-bottom:6px">🔗 Partager ZezoLaunch</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--accent);word-break:break-all;margin-bottom:8px" id="share-url">https://laulo66.github.io/zezo-launch.html/</div>
+          <button onclick="copyShareUrl()" id="copy-btn" style="background:var(--accent);border:none;border-radius:6px;color:#000;font-family:var(--ui);font-size:12px;font-weight:800;padding:7px 16px;cursor:pointer;letter-spacing:0.06em;width:100%">📋 Copier le lien</button>
+        </div>
         <p style="color:var(--muted);font-size:10px;font-family:var(--mono)">ZezoLaunch v1.4 — dashlaulo ecosystem<br>RasTaTranKill66_Alta</p>
       </div>
     </div>
@@ -1030,22 +1041,19 @@ function onCoordsChange() {
   state.lon_sec = parseInt(document.getElementById('lon_sec').value) || '';
   state.lon_ew  = document.getElementById('lon_ew').value;
   saveConfig(); updateUI();
+}
 
-  // Auto-jump : on déclenche si la valeur remplit le champ max (2 chiffres pour min/sec, 2-3 pour deg)
-  const fields = [
-    { id: 'lat_deg',  next: 'lat_min',  max: 90  },
-    { id: 'lat_min',  next: 'lat_sec',  max: 59  },
-    { id: 'lat_sec',  next: 'lon_deg',  max: 59  },
-    { id: 'lon_deg',  next: 'lon_min',  max: 180 },
-    { id: 'lon_min',  next: 'lon_sec',  max: 59  },
-  ];
-  for (const f of fields) {
-    const el = document.getElementById(f.id);
-    const v = parseInt(el.value);
-    if (!isNaN(v) && String(el.value).length >= String(f.max).length) {
-      document.getElementById(f.next)?.focus();
-      break;
-    }
+// Auto-jump indépendant : appelé depuis oninput de chaque input spécifiquement
+// maxVal : valeur max du champ (ex: 59 pour min/sec, 90 pour lat_deg, 180 pour lon_deg)
+function autoJump(el, nextId, maxVal) {
+  const raw = el.value;
+  if (!raw) return;
+  const v = parseInt(raw);
+  if (isNaN(v)) return;
+  // Saute quand le nombre de chiffres saisis atteint le nombre de chiffres du max
+  const digitsNeeded = String(maxVal).length;
+  if (String(Math.abs(v)).length >= digitsNeeded) {
+    setTimeout(() => document.getElementById(nextId)?.focus(), 0);
   }
 }
 
@@ -1350,6 +1358,30 @@ function showToast(msg) {
   t.textContent = msg; t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+/* ── COPY SHARE URL ── */
+function copyShareUrl() {
+  const url = document.getElementById('share-url').textContent.trim();
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ Lien copié !';
+    btn.style.background = 'var(--accent2)';
+    setTimeout(() => {
+      btn.textContent = '📋 Copier le lien';
+      btn.style.background = 'var(--accent)';
+    }, 2000);
+    showToast('Lien copié !');
+  }).catch(() => {
+    // Fallback si clipboard API non disponible
+    const el = document.createElement('textarea');
+    el.value = url;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('Lien copié !');
+  });
 }
 
 init();
